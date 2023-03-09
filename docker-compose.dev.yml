@@ -1,0 +1,25 @@
+version: "3"
+services:
+  nginx:
+    ports:
+      - "3000:80"
+  node-app: #we need bound and to not have node-modules folder deleted
+    build:
+      context: . #location of the docker file 
+      args: 
+        NODE_ENV: development
+    volumes:
+      - ./:/app #syncs data within the container from local 
+      - /app/node_modules #anonymous volume
+    environment:
+      - NODE_ENV=development
+      - MONGO_USER=mie
+      - MONGO_PASSWORD=miepassword
+      - SESSION_SECRET=secret
+    command: npm run dev #you can also run node index.js
+  mongo: 
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mie
+      - MONGO_INITDB_ROOT_PASSWORD=miepassword
+      
