@@ -12,7 +12,15 @@ services:
       - PORT=3000
     depends_on:
       - mongo
-  
+#  sql-server-db:
+#    container_name: sql-server-db
+#    image: mcr.microsoft.com/azure-sql-edge
+#    environment:
+#      PORT: 57000
+#      ACCEPT_EULA: 1
+#      MSSQL_SA_PASSWORD: miepStrong(!)Password
+#      MSSQL_USER: SA
+#      MSSQL_PID: Developer
   mongo: 
     image: mongo
     environment:
@@ -24,4 +32,5 @@ services:
     image: redis
 
 volumes:
+#  sql-server-db:
   mongo-db:
