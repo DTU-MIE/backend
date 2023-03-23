@@ -3,13 +3,13 @@ services:
   nginx:
     image: nginx:stable-alpine
     ports:
-      - "3002:80"
+      - "22022:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
   node-app:
     build: .
     environment:
-      - PORT=3002
+      - PORT=22022
 #    depends_on:
 #      - mongo
 #  sql-server-db:

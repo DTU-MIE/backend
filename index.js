@@ -116,6 +116,6 @@ app.get("/api/v1", (req, res) => {
 //localhost:3000/api/v1/post/
 app.use("/api/v1/logs", logRouter);
 app.use("/api/v1/users", userRouter);
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 22022;
 
 app.listen(port, () => console.log(`listening on port ${port}`));
