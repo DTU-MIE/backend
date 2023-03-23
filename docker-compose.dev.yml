@@ -2,7 +2,7 @@ version: "3"
 services:
   nginx:
     ports:
-      - "22022:80"
+      - "3002:80"
   node-app: #we need bound and to not have node-modules folder deleted
     build:
       context: . #location of the docker file 
