@@ -1,7 +1,7 @@
 //maps URL to controller folder to do some action
 const express = require("express")
 
-const logController = require("../controllers/logController")
+/*const logController = require("../controllers/logController")
 const protect = require("../middleware/authMiddleware")
 
 const router = express.Router()
@@ -20,4 +20,4 @@ router
     .patch(protect,logController.updateLog)
     .delete(protect,logController.deleteLog)
 
-module.exports = router;
+module.exports = router;*/

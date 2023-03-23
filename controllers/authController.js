@@ -1,10 +1,10 @@
 //logic for the application, that gets request from client, retreives info from model and sends response back to client
-const User = require("../models/userModel") //this import user model
+//const User = require("../models/userModel") //this import user model
 
 
-const bcrypt = require("bcryptjs");
+//const bcrypt = require("bcryptjs");
 
-exports.signUp = async (req, res) => {
+/*exports.signUp = async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -59,4 +59,4 @@ exports.login = async (req, res) => {
       status: "fail",
     });
   }
-};
+};*/

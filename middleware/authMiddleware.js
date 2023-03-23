@@ -1,4 +1,4 @@
-const protect = (req, res, next) => {
+/*const protect = (req, res, next) => {
     const { user } = req.session;
   
     if (!user) {
@@ -10,4 +10,4 @@ const protect = (req, res, next) => {
     next(); // this will go to the next step which would be controller
   };
   
-module.exports = protect;
+module.exports = protect;*/

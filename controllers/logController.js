@@ -1,5 +1,5 @@
 //This will interact with our log model
-const Log = require("../models/logModel")
+/*const Log = require("../models/logModel")
 
 //get request from client to server
 // get all posts 
@@ -90,4 +90,4 @@ exports.deleteLog = async (req, res, next) => {
             status: "fail",
         });
     }
-};
+};*/
