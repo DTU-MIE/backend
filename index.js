@@ -1,5 +1,5 @@
 const express = require("express");
-const mongoose = require("mongoose");
+//const mongoose = require("mongoose");
 const session = require("express-session");
 const redis = require("redis");
 const cors = require("cors");
@@ -8,13 +8,13 @@ let RedisStore = require("connect-redis").default;
 
 
 
-mongoose.set('strictQuery', false);
+//mongoose.set('strictQuery', false);
 
 const {
-  MONGO_USER,
-  MONGO_PASSWORD,
-  MONGO_IP,
-  MONGO_PORT,
+//  MONGO_USER,
+//  MONGO_PASSWORD,
+//  MONGO_IP,
+//  MONGO_PORT,
   REDIS_URL,
   SESSION_SECRET,
   REDIS_PORT,
@@ -43,11 +43,11 @@ const userRouter = require("./routes/userRoutes");
 
 const app = express();
 
-const mongoURL = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`;
+/*const mongoURI = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_IP}:${MONGO_PORT}/?authSource=admin`;
 
 const connectWithRetry = () => {
   mongoose
-    .connect(mongoURL, {
+    .connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       //useFindAndModify: false,
@@ -59,7 +59,7 @@ const connectWithRetry = () => {
     });
 };
 
-connectWithRetry();
+connectWithRetry();*/
 
 app.enable("trust proxy");
 app.use(cors({})); // in the curly bracket we can set config options 
@@ -116,6 +116,6 @@ app.get("/api/v1", (req, res) => {
 //localhost:3000/api/v1/post/
 app.use("/api/v1/logs", logRouter);
 app.use("/api/v1/users", userRouter);
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 
 app.listen(port, () => console.log(`listening on port ${port}`));
