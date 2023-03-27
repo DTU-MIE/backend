@@ -4,6 +4,9 @@ const session = require("express-session");
 const redis = require("redis");
 const cors = require("cors");
 const sql = require("mssql");
+var Connection = require('tedious').Connection;
+var Request = require('tedious').Request;
+var TYPES = require('tedious').TYPES;
 let RedisStore = require("connect-redis").default;
 
 
@@ -76,35 +79,137 @@ app.use(
     },
   })
 );
-/*const config = {
-    user: 'sa',
-    password: 'miepStrong(!)Password',
-    server: 'localhost, 57000',
-    database: 'dev_testdb1',
-    options: {
-        enableAirthAbort: true
-    } 
-}
-console.log("it comes here");
-const run = async() => {
-    let pool;
-    try {
-        console.log('Connection Opening...');
-        pool = await new sql.ConnectionPool(config);
-        const {recordset} = await sql.query `select * from users;`;
 
-        console.log(recordset);
-    
-    } catch (err) {
+
+var Connection = require('tedious').Connection;  
+const dbConfig = {  
+      database: "mie",
+      server: "sqlserverdb",
+      host: "localhost",
+      user: "sa", //update me
+      password: "miepStrong(!)Password", 
+      enableArithAbort: true,
+      Encrypt:true,
+      trustServerCertificate: true,
+      port: 1433
+
+};  
+/*sql.connect(dbConfig , function (err) {
+  if(err) console.log(err);
+  let sqlRequest = new sql.Request();
+
+  let sqlQuery = 'Select * from users'
+  sqlRequest.query(sqlQuery , function(err , data) {
+      if(err) console.log(err);
+
+      console.table(data)
+
+      sql.close();
+  })
+});*/
+
+const run = async () => {
+  let pool;
+  try {
+    console.log("Connection opening...");
+    pool = await sql.connect(dbConfig);
+    const {recordset} = await sql.query `select * from users;`;
+
+    console.log(recordset);
+  } catch(err) {
     console.log(err)
-    } finally{
+  } finally {
+    await pool.close();
+    console.log("connection closed");
+  }
+}
+run();
+/*var Request = require('tedious').Request;  
+var TYPES = require('tedious').TYPES;  
+
+function executeStatement() {  
+    var request = new Request("select * from users", function(err) {  
+    if (err) {  
+        console.log(err);}  
+    });  
+    var result = "";  
+    request.on('row', function(columns) {  
+        columns.forEach(function(column) {  
+          if (column.value === null) {  
+            console.log('NULL');  
+          } else {  
+            result+= column.value + " ";  
+          }  
+        });  
+        console.log(result);  
+        result ="";  
+    });  
+
+    request.on('done', function(rowCount, more) {  
+    console.log(rowCount + ' rows returned');  
+    });  
+    
+    // Close the connection after the final event emitted by the request, after the callback passes
+    request.on("requestCompleted", function (rowCount, more) {
+        connection.close();
+    });
+    connection.execSql(request);  
+} 
+executeStatement();
+
+
+async function trytoconnect() {
+  try {
+   // make sure that any items are correctly URL encoded in the connection string
+   let pool = await sql.connect(config);
+   let result = await pool.request().query("select * from users");
+   console.log(result);
+   sql.close;
+  } catch (err) {
+    console.log(err);
+    sql.close;
+  }
+ }
+ trytoconnect();
+
+/*console.log("it comes here");
+const run = async() => {
+  let pool;
+  try {
+    
+    console.log('Connection Opening...');
+    pool = await sql.connect(config);
+    const {recordset} = await sql.query `select * from users;`;
+
+    console.log(recordset);
+    
+  } catch (err) {
+    console.log(err)
+  } finally{
     await pool.close();
     console.log('Connection closed');
-    }
+  }
 }
 
 run();
-console.log("sql runs here");*/
+console.log("sql runs here");
+/*const pool = new sql.ConnectionPool(config)
+
+
+pool.connect().then(() => {
+  console.log('Connected to SQL Server')
+}).catch(err => {
+  console.error('Error connecting to SQL Server', err)
+})
+
+// Example query
+/*const request = pool.request()
+
+request.query('SELECT * FROM USERS').then(result => {
+  console.log(result)
+}).catch(err => {
+  console.error('Error running query', err)
+})*/
 
 app.use(express.json());
 
@@ -119,3 +224,4 @@ app.get("/api/v1", (req, res) => {
 const port = process.env.PORT || 3002;
 
 app.listen(port, () => console.log(`listening on port ${port}`));
+

@@ -17,6 +17,14 @@ services:
 #      - MONGO_PASSWORD=miepassword
       - SESSION_SECRET=secret
     command: npm run dev #you can also run node index.js
+  sqlserverdb:
+    container_name: sqlserverdb
+    image: mcr.microsoft.com/azure-sql-edge
+    environment:
+      ACCEPT_EULA: 1
+      MSSQL_SA_PASSWORD: miepStrong(!)Password
+      MSSQL_USER: SA
+      MSSQL_PID: Developer
 #  mongo: 
 #    image: mongo
 #    environment:

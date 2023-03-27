@@ -8,20 +8,20 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
   node-app:
     build: .
-    image: aroojchaudhry/mie
     environment:
       - PORT=3002
 #    depends_on:
 #      - mongo
-#  sql-server-db:
-#    container_name: sql-server-db
-#    image: mcr.microsoft.com/azure-sql-edge
-#    environment:
-#      PORT: 57000
-#      ACCEPT_EULA: 1
-#      MSSQL_SA_PASSWORD: miepStrong(!)Password
-#      MSSQL_USER: SA
-#      MSSQL_PID: Developer
+  sqlserverdb:
+    container_name: sqlserverdb
+    image: mcr.microsoft.com/azure-sql-edge
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: miepStrong(!)Password
+      MSSQL_USER: sa
+      MSSQL_PID: Developer
 #  mongo: 
 #    image: mongo
 #    environment:
