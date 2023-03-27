@@ -19,6 +19,7 @@ INSERT INTO USERS VALUES (3, 'Amanda', 'amanda@gmail.com');
 INSERT INTO USERS VALUES (4, 'alex', 'alex@gmail.com');
 INSERT INTO USERS VALUES (5, 'carlos', 'carlos@gmail.com');
 INSERT INTO USERS VALUES (6, 'no', 'no@gmail.com');
+INSERT INTO USERS VALUES (6, 'yes', 'yes@gmail.com');
 
 GO
 
