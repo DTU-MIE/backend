@@ -1,0 +1,2 @@
+USE mie;
+SELECT * FROM USERS;

@@ -1,23 +1,10 @@
 //maps URL to controller folder to do some action
-const express = require("express")
 
-/*const logController = require("../controllers/logController")
-const protect = require("../middleware/authMiddleware")
+const express = require('express');
+const logController = require('../controllers/logController');
+const router = express.Router();
 
-const router = express.Router()
+router.post('/', logController.submitLog);
 
-//localhost:3000/
+module.exports = router;
 
-router
-    .route("/")
-    .get(protect,logController.getAllLogs)
-    .post(protect, logController.createLog) //protect checks if user is logged in and if he is then it uses the next methods 
-                                            // and goes to the next middleware which creates the log
-
-router
-    .route("/:id")
-    .get(protect,logController.getOneLog)
-    .patch(protect,logController.updateLog)
-    .delete(protect,logController.deleteLog)
-
-module.exports = router;*/

@@ -9,19 +9,15 @@ IF NOT EXISTS (
 GO
 
 USE mie;
-DROP TABLE IF EXISTS USERS;
-GO
-CREATE TABLE USERS (id INT, Name NVARCHAR(50), Email NVARCHAR(255));
-GO
-INSERT INTO USERS VALUES (1, 'Bill Gates', 'bill.gates@gmail.com');
-INSERT INTO USERS VALUES (2, 'Arooj Chaudhry', 'acdtu@gmail.com');
-INSERT INTO USERS VALUES (3, 'Amanda', 'amanda@gmail.com');
-INSERT INTO USERS VALUES (4, 'alex', 'alex@gmail.com');
-INSERT INTO USERS VALUES (5, 'carlos', 'carlos@gmail.com');
-INSERT INTO USERS VALUES (6, 'no', 'no@gmail.com');
-INSERT INTO USERS VALUES (6, 'yes', 'yes@gmail.com');
+IF OBJECT_ID('USERS', 'U') IS NULL
+DROP TABLE USERS
+DROP TABLE IF EXISTS log;
 
 GO
+CREATE TABLE USERS (Name NVARCHAR(50), Email NVARCHAR(255));
+GO
 
+GO
+CREATE TABLE log (logText NVARCHAR(50));
+GO
 SELECT * FROM USERS;
-GO 

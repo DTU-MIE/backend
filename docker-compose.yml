@@ -10,28 +10,22 @@ services:
     build: .
     environment:
       - PORT=3002
-#    depends_on:
-#      - mongo
-  sqlserverdb:
-    container_name: sqlserverdb
+    depends_on:
+      - sql
+  sql:
+    container_name: sql
     image: mcr.microsoft.com/azure-sql-edge
     ports:
       - "1433:1433"
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: miepStrong(!)Password
-      MSSQL_USER: sa
+      ACCEPT_EULA: 1
       MSSQL_PID: Developer
+
 #  mongo: 
 #    image: mongo
 #    environment:
 #      - MONGO_INITDB_ROOT_USERNAME=mie
 #      - MONGO_INITDB_ROOT_PASSWORD=miepassword
-#    volumes:
-#      - mongo-db:/data/db 
+
   redis: 
     image: redis
-
-#volumes:
-#  sql-server-db:
-#  mongo-db:
