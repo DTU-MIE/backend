@@ -3,6 +3,9 @@ const session = require("express-session");
 const redis = require("redis");
 const cors = require("cors");
 const sql = require("mssql");
+const fileUpload = require('./middleware/fileUpload');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
@@ -10,20 +13,21 @@ let RedisStore = require("connect-redis").default;
 
 //const Sequelize = require('sequelize');
 //const { syncDB } = require('./models/logModel');
+const {  getNeedsByID, insertNeed } = require('./models/needModel');
 const logRoutes = require('./routes/logRoutes');
-
+const needRoutes = require('./routes/needRoutes');
+const { upload, createValidator } = require('./middleware/fileUpload')
+const { create, getAll } = require('./controllers/needController')
 
 
 const {
   REDIS_URL,
   SESSION_SECRET,
-  REDIS_PORT,
-  MSSQL_USER,
-  MSSQL_SA_PASSWORD,
+  REDIS_PORT
 } = require("./config/config");
 
 
-const redisClient = redis.createClient({
+/*const redisClient = redis.createClient({
   socket: {
     host: REDIS_URL,
     port: REDIS_PORT
@@ -36,18 +40,16 @@ console.log("Connecting to Redis");
 
 redisClient.on('error', err => {
     console.log('Error ' + err);
-});
+});*/
   
 
-
-//const logRoutes = require("./routes/logRoutes");
 //const userRouter = require("./routes/userRoutes");
 
 const app = express();
 
 app.enable("trust proxy");
 app.use(cors({})); // in the curly bracket we can set config options 
-app.use(
+/*pp.use(
   session({
     store: new RedisStore({ client: redisClient }),
     secret: SESSION_SECRET,
@@ -59,7 +61,7 @@ app.use(
       maxAge: 30000,
     },
   })
-);
+);*/
 
 
 var Connection = require('tedious').Connection;  
@@ -96,8 +98,9 @@ run();*/
 
 
 //app.use(logRoutes);
-
 app.use(express.json());
+// Configure middleware
+
 
 app.get("/api/v1", (req, res) => {
   res.send("nobody there!!!");
@@ -106,6 +109,11 @@ app.get("/api/v1", (req, res) => {
 
 //localhost:3000/api/v1/post/
 app.use("/api/v1/logs", logRoutes);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/v1/', needRoutes);
+
 //app.use("/api/v1/users", userRouter);
 const port = process.env.PORT || 3002;
 app.listen(port, () => console.log(`listening on port ${port}`));
