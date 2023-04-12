@@ -1,2 +1,2 @@
 USE mie;
-SELECT * FROM NEED;
+SELECT * FROM test; 
