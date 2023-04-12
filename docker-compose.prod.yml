@@ -9,16 +9,18 @@ services:
       args: 
         NODE_ENV: production
     environment:
-      - NODE_ENV=production
-      - SESSION_SECRET=${SESSION_SECRET}
+      - NODE_ENV=development
+      - SESSION_SECRET=secret
+      - MSSQL_SA_PASSWORD=miepStrong(!)Password
+      - MSSQL_USER=sa
     command: node index.js
   sql:
     container_name: sql
     image: mcr.microsoft.com/azure-sql-edge
     environment:
       ACCEPT_EULA: 1
-      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
-      MSSQL_USER: ${MSSQL_USER}
+      MSSQL_SA_PASSWORD: miepStrong(!)Password
+      MSSQL_USER: sa
       MSSQL_PID: Developer
 
 #  mongo: 
