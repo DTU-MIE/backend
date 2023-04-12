@@ -21,10 +21,10 @@ services:
     container_name: sql
     image: mcr.microsoft.com/azure-sql-edge
     environment:
-      ACCEPT_EULA: 1
-      MSSQL_SA_PASSWORD: miepStrong(!)Password
-      MSSQL_USER: sa
-      MSSQL_PID: Developer
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=miepStrong(!)Password
+      - MSSQL_USER=sa
+      - MSSQL_PID=Developer
 #  mongo: 
 #    image: mongo
 #    environment:
