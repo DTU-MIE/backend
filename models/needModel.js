@@ -10,7 +10,7 @@ const dbConfig = {
     database: "mie",
     server: "sql",
     host: MSSQL_HOST || "localhost",
-    user: MSSQL_USER, //update me
+    user: MSSQL_USER, 
     password: MSSQL_SA_PASSWORD, 
     enableArithAbort: true,
     Encrypt:true,

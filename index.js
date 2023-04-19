@@ -13,6 +13,7 @@ let RedisStore = require("connect-redis").default;
 
 //const logRoutes = require('./routes/logRoutes');
 const needRoutes = require('./routes/needRoutes');
+const airtableI = require('./routes/airtableRoutes');
 //const searchRoutes = require('./routes/searchRoutes');
 //const swaggerUi = require('swagger-ui-express');
 //const YAML = require('yamljs');
@@ -111,6 +112,7 @@ app.get("/api/v1", (req, res) => {
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1/', needRoutes);
+app.use('/api/v1/', airtableI);
 //app.use('/api/v1/', searchRoutes);
 //app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 //app.use('/api/v1/n/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument1, options));
