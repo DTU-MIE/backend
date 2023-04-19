@@ -1,74 +1,63 @@
-const fs = require('fs');
-const path = require('path');
 const mime = require('mime');
 const model =  require('../models/needModel')
 
 async function createNeed(req, res) {
-  const { NeedIs, Title, ContactPerson } = req.body;
-  console.log('req.file:', req.file);
-  const FileData = req.file ? req.file.buffer.slice(0, req.file.buffer.length) : null;
-  const originalname = req.file ? req.file.originalname : null;
-  const extension = originalname ? originalname.split('.').pop() : null;
-  console.log('fileData:', FileData);
-  console.log('needis', req.body);
+  const {NeedIs, Title, ContactPerson} = req.body;
+  const FileData = req.file ? Buffer.from(req.file.buffer) : null;
+  const FileName = req.file ? req.file.originalname : null;
+  const extension = FileName ? FileName.split('.').pop() : null;
   const createdAt = new Date();
-  const id = await model.insertNeed({ NeedIs, Title, ContactPerson, FileData, originalname, extension, createdAt });
+  const id = await model.insertNeed({NeedIs, Title, ContactPerson, FileData, FileName, extension, createdAt});
   return res.json({ id });
 }
-/*
-async function getNeed(req, res) {
-  const { NeedIs, Title, ContactPerson } = req.body;
+
+const getNeed = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const need = await model.getNeedById(id);
+  
+    if (!need){
+      return res.status(404).json({message: 'Need is not found'});
+    } 
+
+    const responseBody = {
+      ID: need.ID,
+      NeedIs: need.NeedIs,
+      Title: need.Title,
+      ContactPerson: need.ContactPerson,
+      CreatedAt: need.CreatedAt,
+    };
+
+    const fileURL = `${req.protocol}://${req.headers.host}/api/v1/download/${id}`;
+    responseBody.fileURL = `<a href="${fileURL}">${need.FileName}</a>`;
+    res.json({ body: responseBody });
+
+  } catch(error) {
+    console.error(error);
+    res.status(500).json({ message: 'Need not found: Internal Server Error' });
+  }
+};
+
+const downloadFile = async (req, res) => {
   const { id } = req.params;
   const need = await model.getNeedById(id);
 
-  if (!need) {
-    return res.status(404).json({ message: 'Need not found' });
-  }
-  if (need.FileData) {
-    const fileData = Buffer.from(need.FileData, 'base64');
-    const contentType = mime.getType('.' + need.extension);
-    res.setHeader('Content-Type', contentType);
-    res.setHeader('Content-Disposition', `attachment; filename=${need.originalname}`);
-    return res.json({fileData});
-  }
-  else {
-    return res.json(need);
-  }
-}
-*/
-async function getNeed(req, res) {
-  const { id } = req.params;
-  const need = await model.getNeedById(id);
-
-  if (!need) {
-    return res.status(404).json({ message: 'Need not found' });
+  if (!need || !need.FileData) {
+    return res.status(404).json({message: 'File/Need not found'});
   }
 
-  const responseBody = {
-    ID: need.ID,
-    NeedIs: need.NeedIs,
-    Title: need.Title,
-    ContactPerson: need.ContactPerson,
-    CreatedAt: need.CreatedAt,
-    OriginalName: need.originalname,
-    Extension: need.extension,
-    FileData: null
-  };
+  const FileData = Buffer.from(need.FileData, 'base64');
+  const contentType = mime.getType('.' + need.extension);
+  
+  res.set({
+    'Content-Type': contentType,
+    'Content-Disposition': `attachment; filename=${need.FileName}`,
+  }).send(FileData);
+};
 
-  if (need.FileData) {
-    responseBody.FileData = Buffer.from(need.FileData, 'base64');
-    const contentType = mime.getType('.' + need.extension);
-    res.status(200).set({
-      'Content-Type': contentType,
-      'Content-Disposition': `inline; filename=${need.originalname}`
-    }).send(responseBody);
-    console.log(responseBody);
-  } else {
-    res.status(200).json(responseBody);
-  }    
-}
 
 module.exports = {
   createNeed,
   getNeed,
+  downloadFile
 };

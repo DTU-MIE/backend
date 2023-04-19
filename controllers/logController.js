@@ -1,4 +1,4 @@
-const Log = require('../models/logModel');
+/*const Log = require('../models/logModel');
 
 class LogController {
     static submitLog(req, res) {
@@ -14,4 +14,4 @@ class LogController {
     }
   }
 
-module.exports = LogController;
+module.exports = LogController;*/

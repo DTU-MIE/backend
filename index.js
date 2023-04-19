@@ -11,15 +11,18 @@ var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;*/
 let RedisStore = require("connect-redis").default;
 
-const logRoutes = require('./routes/logRoutes');
+//const logRoutes = require('./routes/logRoutes');
 const needRoutes = require('./routes/needRoutes');
+//const searchRoutes = require('./routes/searchRoutes');
+//const swaggerUi = require('swagger-ui-express');
+//const YAML = require('yamljs');
+//const swaggerDocument = YAML.load('./swagger/api.yaml');
 
 const {
   REDIS_URL,
   SESSION_SECRET,
   REDIS_PORT
 } = require("./config/config");
-
 
 const redisClient = redis.createClient({
   socket: {
@@ -53,6 +56,7 @@ app.use(
     },
   })
 );
+
 
 
 //var Connection = require('tedious').Connection;  
@@ -89,18 +93,30 @@ run();*/
 
 app.use(express.json());
 
+/*const swaggerDocument1 = require('./swagger/getneed').swaggerDocument;
+
+const options = {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Example API',
+  explorer: true
+};*/
 
 app.get("/api/v1", (req, res) => {
   res.send("nobody there!!!");
   console.log("yeah it ran");
 });
 
-//localhost:3000/api/v1/
-app.use("/api/v1/logs", logRoutes);
-app.use(express.json());
+//localhost:3002/api/v1/
+//app.use("/api/v1/logs", logRoutes);
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1/', needRoutes);
+//app.use('/api/v1/', searchRoutes);
+//app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+//app.use('/api/v1/n/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument1, options));
+
+
+
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => console.log(`listening on port ${port}`));

@@ -1,4 +1,4 @@
-const sql = require("mssql");
+/*const sql = require("mssql");
 
 const {
     MSSQL_USER,
@@ -40,5 +40,5 @@ class Log {
     }
   }
   
-  module.exports = Log;
+  module.exports = Log;*/
   

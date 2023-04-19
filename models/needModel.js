@@ -3,12 +3,13 @@ const sql = require("mssql");
 const {
     MSSQL_USER,
     MSSQL_SA_PASSWORD,
+    MSSQL_HOST
   } = require("../config/config");
 
 const dbConfig = {  
     database: "mie",
     server: "sql",
-    host: "130.225.170.197",
+    host: MSSQL_HOST || "localhost",
     user: MSSQL_USER, //update me
     password: MSSQL_SA_PASSWORD, 
     enableArithAbort: true,
@@ -23,16 +24,17 @@ const pool = new sql.ConnectionPool(dbConfig);
 async function insertNeed(need) {
   await pool.connect();
   const request = pool.request();
-  request.input('NeedIs', sql.NVarChar(50), need.NeedIs);
-  request.input('Title', sql.NVarChar(255), need.Title);
-  request.input('ContactPerson', sql.NVarChar(255), need.ContactPerson);
-  request.input('FileData', sql.VarBinary(sql.MAX), need.FileData);
-  request.input('originalname', sql.NVarChar(255), need.originalname);
-  request.input('extension', sql.NVarChar(10), need.extension);
-  request.input('createdAt', sql.DateTime, need.createdAt);
+  request
+  .input('NeedIs', sql.NVarChar(50), need.NeedIs)
+  .input('Title', sql.NVarChar(255), need.Title)
+  .input('ContactPerson', sql.NVarChar(255), need.ContactPerson)
+  .input('FileData', sql.VarBinary(sql.MAX), need.FileData)
+  .input('FileName', sql.NVarChar(255), need.FileName)
+  .input('extension', sql.NVarChar(10), need.extension)
+  .input('createdAt', sql.DateTime, need.createdAt);
   const result = await request.query(`
-    INSERT INTO NEED (NeedIs, Title, ContactPerson, FileData, originalname, extension, CreatedAt)
-    VALUES (@NeedIs, @Title, @ContactPerson, @FileData, @originalname, @extension, @createdAt);
+    INSERT INTO NEED (NeedIs, Title, ContactPerson, FileData, FileName, extension, CreatedAt)
+    VALUES (@NeedIs, @Title, @ContactPerson, @FileData, @FileName, @extension, @createdAt);
     SELECT SCOPE_IDENTITY() AS ID;
   `);
   return result.recordset[0].ID;
