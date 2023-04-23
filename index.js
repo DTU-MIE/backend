@@ -15,9 +15,9 @@ let RedisStore = require("connect-redis").default;
 const needRoutes = require('./routes/needRoutes');
 const airtableI = require('./routes/airtableRoutes');
 //const searchRoutes = require('./routes/searchRoutes');
-//const swaggerUi = require('swagger-ui-express');
-//const YAML = require('yamljs');
-//const swaggerDocument = YAML.load('./swagger/api.yaml');
+// const swaggerUi = require('swagger-ui-express');
+// const YAML = require('yamljs');
+// const swaggerDocument = YAML.load('./swagger/api.yaml');
 
 const {
   REDIS_URL,
@@ -43,7 +43,12 @@ redisClient.on('error', err => {
 const app = express();
 
 app.enable("trust proxy");
-app.use(cors({})); // in the curly bracket we can set config options 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'multipart/form-data'],
+})); // in the curly bracket we can set config options 
+
 app.use(
   session({
     store: new RedisStore({ client: redisClient }),
@@ -114,8 +119,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/v1/', needRoutes);
 app.use('/api/v1/', airtableI);
 //app.use('/api/v1/', searchRoutes);
-//app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-//app.use('/api/v1/n/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument1, options));
+// app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use('/api/v1/n/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument1, options));
 
 
 
