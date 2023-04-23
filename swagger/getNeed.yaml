@@ -1,0 +1,47 @@
+swagger: '2.0'
+info:
+  version: "1.0.0"
+  title: "Get a need from id"
+basePath: "/"
+schemes:
+  - "http"
+paths:
+  /api/v1/needs/{id}:
+    get:
+      summary: "Get a need by ID"
+      parameters:
+        - in: path
+          name: id
+          description: ID of the need to get
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              body:
+                type: object
+                properties:
+                  ID:
+                    type: "integer"
+                  NeedIs:
+                    type: "string"
+                  Title:
+                    type: "string"
+                  ContactPerson:
+                    type: "string"
+                  CreatedAt:
+                    type: "string"
+                    format: date-time
+                  fileURL:
+                    type: "string"
+                    description: URL to download the file associated with the need
+        404:
+          description: Need is not found
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"

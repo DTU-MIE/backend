@@ -1,0 +1,47 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API for creating a new need"
+basePath: "/"
+schemes:
+  - "http"
+paths:
+  /api/v1/needs:
+    post:
+      summary: "Create a new need"
+      consumes:
+        - "multipart/form-data"
+      parameters:
+        - name: "NeedIs"
+          in: "formData"
+          required: true
+          type: "string"
+          description: "Describe your need"
+        - name: "Title"
+          in: "formData"
+          required: true
+          type: "string"
+          description: "The title of the need."
+        - name: "ContactPerson"
+          in: "formData"
+          required: true
+          type: "string"
+          description: "The name of the contact person for the need."
+        - name: "FileData"
+          in: "formData"
+          type: "file"
+          description: "this is an optional file attachment for the need."
+      responses:
+        200:
+          description: "Success"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+                description: "The ID of the newly created need."
+        400:
+          description: "Bad Request"
+        500:
+          description: "Internal Server Error"
+

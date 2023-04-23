@@ -15,9 +15,15 @@ let RedisStore = require("connect-redis").default;
 const needRoutes = require('./routes/needRoutes');
 const airtableI = require('./routes/airtableRoutes');
 //const searchRoutes = require('./routes/searchRoutes');
-// const swaggerUi = require('swagger-ui-express');
-// const YAML = require('yamljs');
-// const swaggerDocument = YAML.load('./swagger/api.yaml');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const createNeedSpec = YAML.load('./swagger/createNeed.yaml');
+const getNeedSpec = YAML.load('./swagger/getNeed.yaml');
+const downloadFileSpec = YAML.load('./swagger/downloadFile.yaml');
+const _ = require('lodash');
+
+const apiSpec = _.merge({}, createNeedSpec, getNeedSpec, downloadFileSpec);
+//const swaggerDocument2 = YAML.load('./swagger/getNeed.yaml');
 
 const {
   REDIS_URL,
@@ -99,9 +105,9 @@ run();*/
 
 app.use(express.json());
 
-/*const swaggerDocument1 = require('./swagger/getneed').swaggerDocument;
+//const swaggerDocument2 = YAML.load('./swagger/getNeed.yaml');
 
-const options = {
+/*const options = {
   customCss: '.swagger-ui .topbar { display: none }',
   customSiteTitle: 'Example API',
   explorer: true
@@ -119,8 +125,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/v1/', needRoutes);
 app.use('/api/v1/', airtableI);
 //app.use('/api/v1/', searchRoutes);
-// app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// app.use('/api/v1/n/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument1, options));
+app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(apiSpec));
+//app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocument2));
+//app.use('/api2/v1/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocument2));
+//app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument2, options));
 
 
 

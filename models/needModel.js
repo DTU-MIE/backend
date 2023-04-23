@@ -35,9 +35,9 @@ async function insertNeed(need) {
   const result = await request.query(`
     INSERT INTO NEED (NeedIs, Title, ContactPerson, FileData, FileName, extension, CreatedAt)
     VALUES (@NeedIs, @Title, @ContactPerson, @FileData, @FileName, @extension, @createdAt);
-    SELECT SCOPE_IDENTITY() AS ID;
+    SELECT SCOPE_IDENTITY() AS id;
   `);
-  return result.recordset[0].ID;
+  return result.recordset[0].id;
 }
 
 async function getNeedById(id) {

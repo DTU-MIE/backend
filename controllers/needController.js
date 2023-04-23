@@ -21,7 +21,7 @@ const getNeed = async (req, res) => {
     } 
 
     const responseBody = {
-      ID: need.ID,
+      id: need.id,
       NeedIs: need.NeedIs,
       Title: need.Title,
       ContactPerson: need.ContactPerson,
