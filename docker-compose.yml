@@ -5,7 +5,7 @@ services:
     ports:
       - "3002:80"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/nginx.conf:ro
+      - /etc/nginx/sites-available/default.conf:/etc/nginx/nginx.conf:ro
   node-app:
     build: .
     environment:
