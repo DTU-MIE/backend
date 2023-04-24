@@ -3,7 +3,7 @@ const model =  require('../models/needModel')
 
 async function createNeed(req, res) {
   const {NeedIs, Title, ContactPerson} = req.body;
-  const FileData = req.file ? Buffer.from(req.file.buffer) : null;
+  const FileData = req.file ? req.file.buffer : null;
   const FileName = req.file ? req.file.originalname : null;
   const extension = FileName ? FileName.split('.').pop() : null;
   const createdAt = new Date();
