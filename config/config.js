@@ -7,7 +7,7 @@ module.exports = {
     REDIS_URL: process.env.REDIS_URL || "redis",
     REDIS_PORT: process.env.REDIS_PORT || 6379,
     SESSION_SECRET: process.env.SESSION_SECRET,
-    API_KEY: process.env.API_KEY || 'keyxH90r5GgPBip9q',
-    BASE_KEY: process.env.BASE_KEY || 'appS0HcQMolux76kh'
+    API_KEY: process.env.API_KEY || 'keyEavRBNRoSft45f',
+    BASE_KEY: process.env.BASE_KEY || 'appJoZMNg6B5pJ9lN'
     
 };
