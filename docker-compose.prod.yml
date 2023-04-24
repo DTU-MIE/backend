@@ -5,15 +5,11 @@ services:
       - "80:80"
     volumes:
       - /etc/nginx/sites-available/default.conf:/etc/nginx/conf.d/default.conf:rw
-    dns:
-      - 130.226.1.2
   node-app:
     build:
       context: .
       args: 
         NODE_ENV: production
-    dns:
-      - 130.226.1.2
     environment:
       - NODE_ENV=development
       - SESSION_SECRET=secret
