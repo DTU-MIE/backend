@@ -5,7 +5,8 @@ services:
     ports:
       - "3002:80"
     volumes:
-      - /etc/nginx:/etc/nginx:rw
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw
+    user: "nginx:nginx"
 #    volumes:
 #      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:rw
   node-app:
