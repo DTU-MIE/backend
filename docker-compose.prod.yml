@@ -10,6 +10,8 @@ services:
       context: .
       args: 
         NODE_ENV: production
+    dns:
+      - 130.226.1.2
     environment:
       - NODE_ENV=development
       - SESSION_SECRET=secret
