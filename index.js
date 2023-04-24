@@ -133,5 +133,5 @@ app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(apiSpec));
 
 
 
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 80;
 app.listen(port, () => console.log(`listening on port ${port}`));
