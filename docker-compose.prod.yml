@@ -10,6 +10,10 @@ services:
       context: .
       args: 
         NODE_ENV: production
+    networks:
+      default:
+        external:
+          name: nginx-proxy
     environment:
       - NODE_ENV=development
       - SESSION_SECRET=secret

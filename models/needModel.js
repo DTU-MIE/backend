@@ -50,7 +50,20 @@ async function getNeedById(id) {
   return result.recordset[0];
 }
 
+const getAllNeeds = async () => {
+  try {
+    const pool = await sql.connect(dbConfig);
+    const result = await pool.request().query('SELECT * FROM NEED');
+    return result.recordset;
+  } catch (err) {
+    console.error(err);
+  } finally {
+    sql.close();
+  }
+};
+
 module.exports = {
   insertNeed,
   getNeedById,
+  getAllNeeds
 };

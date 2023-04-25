@@ -55,9 +55,38 @@ const downloadFile = async (req, res) => {
   }).send(FileData);
 };
 
+const allNeeds = async (req, res) => {
+  try {
+    const needs = await model.getAllNeeds();
+
+    const responseBody = needs.map((need) => {
+      const fileURL = `${req.protocol}://${req.headers.host}/api/v1/download/${need.id}`;
+      return {
+        id: need.id,
+        NeedIs: need.NeedIs,
+        Title: need.Title,
+        ContactPerson: need.ContactPerson,
+        CreatedAt: need.CreatedAt,
+        fileURL: `<a href="${fileURL}">${need.FileName}</a>`,
+      };
+    });
+
+    res.json({ body: responseBody });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+
+
+
+
+
 
 module.exports = {
   createNeed,
   getNeed,
-  downloadFile
+  downloadFile,
+  allNeeds
 };

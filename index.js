@@ -48,6 +48,8 @@ redisClient.on('error', err => {
 
 const app = express();
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json({ limit: '500mb' }));
 app.enable("trust proxy");
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -124,6 +126,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1/', needRoutes);
 app.use('/api/v1/', airtableI);
+
 //app.use('/api/v1/', searchRoutes);
 app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(apiSpec));
 //app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocument2));

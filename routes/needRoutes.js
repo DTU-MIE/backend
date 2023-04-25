@@ -9,5 +9,6 @@ const router = express.Router();
 router.post('/needs', upload.single('FileData'), needController.createNeed);
 router.get('/needs/:id', needController.getNeed);
 router.get('/download/:id', needController.downloadFile);
+router.get('/allneeds', needController.allNeeds);
 
 module.exports = router;
