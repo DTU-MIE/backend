@@ -1,10 +1,11 @@
 version: "3"
 services:
   nginx:
+    container_name: nginx
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
-      - /etc/nginx/sites-available/default.conf:/etc/nginx/conf.d/default.conf:rw
+      - /etc/nginx/sites-available/default.conf:/etc/nginx/conf.d/default.conf:ro
   node-app:
     build:
       context: .
