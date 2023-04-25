@@ -26,6 +26,9 @@ services:
     environment:
       ACCEPT_EULA: 1
       MSSQL_PID: Developer
+
+  redis: 
+    image: redis
 networks:
   nginx-proxy:
     driver: bridge
@@ -36,5 +39,3 @@ networks:
 #      - MONGO_INITDB_ROOT_USERNAME=mie
 #      - MONGO_INITDB_ROOT_PASSWORD=miepassword
 
-  redis: 
-    image: redis
