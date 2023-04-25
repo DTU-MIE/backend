@@ -11,9 +11,7 @@ services:
       args: 
         NODE_ENV: production
     networks:
-      default:
-        external:
-          name: nginx-proxy
+      - nginx-proxy
     environment:
       - NODE_ENV=development
       - SESSION_SECRET=secret
@@ -28,6 +26,9 @@ services:
       MSSQL_SA_PASSWORD: miepStrong(!)Password
       MSSQL_USER: sa
       MSSQL_PID: Developer
+networks:
+  nginx-proxy:
+    driver: bridge
 
 #  mongo: 
 #    environment:

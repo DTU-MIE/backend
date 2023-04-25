@@ -15,12 +15,9 @@ services:
     environment:
       - PORT=3002
     networks:
-      default:
-        external:
-          name: nginx-proxy
+      - nginx-proxy
     depends_on:
       - sql
-
   sql:
     container_name: sql
     image: mcr.microsoft.com/azure-sql-edge
@@ -29,6 +26,9 @@ services:
     environment:
       ACCEPT_EULA: 1
       MSSQL_PID: Developer
+networks:
+  nginx-proxy:
+    driver: bridge
 
 #  mongo: 
 #    image: mongo
