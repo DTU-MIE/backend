@@ -3,7 +3,7 @@ services:
   nginx:
     container_name: nginx
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - /etc/nginx/sites-available/default.conf:/etc/nginx/conf.d/default.conf:ro
   node-app:
@@ -11,8 +11,8 @@ services:
       context: .
       args: 
         NODE_ENV: production
-    networks:
-      - nginx-proxy
+    # networks:
+    #   - nginx-proxy
     environment:
       - NODE_ENV=development
       - SESSION_SECRET=secret
@@ -27,9 +27,9 @@ services:
       MSSQL_SA_PASSWORD: miepStrong(!)Password
       MSSQL_USER: sa
       MSSQL_PID: Developer
-networks:
-  nginx-proxy:
-    driver: bridge
+# networks:
+#   nginx-proxy:
+#     driver: bridge
 
 #  mongo: 
 #    environment:

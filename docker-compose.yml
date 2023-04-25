@@ -14,8 +14,8 @@ services:
     build: .
     environment:
       - PORT=3002
-    networks:
-      - nginx-proxy
+    # networks:
+    #   - nginx-proxy
     depends_on:
       - sql
   sql:
@@ -29,9 +29,9 @@ services:
 
   redis: 
     image: redis
-networks:
-  nginx-proxy:
-    driver: bridge
+# networks:
+#   nginx-proxy:
+#     driver: bridge
 
 #  mongo: 
 #    image: mongo
