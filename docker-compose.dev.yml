@@ -1,8 +1,10 @@
 version: "3"
 services:
   nginx:
+    environment:
+      NGINX_PORT: "8080"
     ports:
-      - "3002:80"
+      - "3002:8080"
   node-app: #we need bound and to not have node-modules folder deleted
     build:
       context: . #location of the docker file 
@@ -25,6 +27,10 @@ services:
       MSSQL_SA_PASSWORD: miepStrong(!)Password
       MSSQL_USER: sa
       MSSQL_PID: Developer
+    # volumes:
+    #   - ./data:/var/opt/mssql/data
+    #   - ./log:/var/opt/mssql/log
+    #   - ./secrets:/var/opt/mssql/secrets
 #  mongo: 
 #    image: mongo
 #    environment:
