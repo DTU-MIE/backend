@@ -31,9 +31,9 @@ async function authenticate(req, res, next) {
     }
 
    
-    const role = user.profession === 'Health Care Professional' ? 'Admin' : 'User';
+    let role = user.profession === 'Health Care Professional' ? 'Admin' : 'User';
     if (user.profession === 'student') {
-    role = 'User';
+      role = 'User';
     }
     req.session.user = { email: user.email, role };
     next();
