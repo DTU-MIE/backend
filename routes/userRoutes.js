@@ -16,9 +16,9 @@ router.post('/login', authenticate, loginUser);
 //logout user
 router.post('/logout', logoutUser);
 //only student can acccess this endpoint
-router.get('/privilages', authorize(['student']), (req, res) => {
-    res.json({ message: 'This endpoint can only be accessed by student' });
-  });
+// router.get('/privilages', authorize(['student']), (req, res) => {
+//     res.json({ message: 'This endpoint can only be accessed by student' });
+//   });
 
 module.exports = router;
 

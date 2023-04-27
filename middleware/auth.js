@@ -44,7 +44,7 @@ async function authenticate(req, res, next) {
 }
 
   // authorize user only access certain endpoint, but for now there is no privilages assigneed
-  function authorize(roles) {
+async  function authorize(roles) {
     return (req, res, next) => {
       const userRole = req.session.user.role;
       if (!roles.includes(userRole)) {
