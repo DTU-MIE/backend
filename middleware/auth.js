@@ -31,16 +31,16 @@ async function authenticate(req, res, next) {
     }
 
    
-    let role = user.profession === 'Health Care Professional' ? 'Admin' : 'User';
+    const role = user.profession === 'Health Care Professional' ? 'Admin' : 'User';
     if (user.profession === 'student') {
       role = 'User';
     }
     req.session.user = { email: user.email, role };
     next();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 
   // authorize user only access certain endpoint, but for now there is no privilages assigneed
