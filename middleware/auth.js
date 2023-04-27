@@ -37,10 +37,10 @@ async function authenticate(req, res, next) {
     }
     req.session.user = { email: user.email, role };
     next();
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
   // authorize user only access certain endpoint, but for now there is no privilages assigneed
