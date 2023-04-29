@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate, authorize } = require('../middleware/auth');
+const { authenticateToken} = require('../middleware/auth');
 const {
   registerUser,
   loginUser,
@@ -9,12 +9,16 @@ const {
 
 //register user
 router.post('/register', registerUser);
-
 //login user
-router.post('/login', authenticate, loginUser);
+router.post('/login', loginUser);
+
+router.get('/profile', authenticateToken, (req, res) => {
+    res.send(req.user);
+});
+router.post('/logout', logoutUser);
 
 //logout user
-router.post('/logout', logoutUser);
+// router.post('/logout', logoutUser);
 //only student can acccess this endpoint
 // router.get('/privilages', authorize(['student']), (req, res) => {
 //     res.json({ message: 'This endpoint can only be accessed by student' });

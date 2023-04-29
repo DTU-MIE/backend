@@ -7,8 +7,7 @@ class BadRequestError extends Error {
       this.statusCode = 400;
     }
   }
-
-
+const saltRounds = 10;
 const {
     MSSQL_USER,
     MSSQL_SA_PASSWORD,
@@ -30,9 +29,7 @@ const dbConfig = {
 
 const pool = new sql.ConnectionPool(dbConfig);
 
-  
-
-async function createUser(userDetails) {
+  async function createUser(userDetails) {
     await pool.connect();
     //Check if email already exists in database
     const emailExists = await pool.request()
@@ -50,7 +47,7 @@ async function createUser(userDetails) {
     }
     
     //hashing the password
-    const hashedPassword = await bcrypt.hash(userDetails.password, 10);
+    const hashedPassword = await bcrypt.hash(userDetails.password, saltRounds);
     
     const request = pool.request();
     request
@@ -98,10 +95,22 @@ async function createUser(userDetails) {
     console.log(user);
     return user;
    
-  }
+}
+  
+async function Blacklist(token) {
+    const connection = await sql.connect(dbConfig);
+    const request = connection.request();
+    request.input('token', sql.NVarChar, token);
+    await request.query('INSERT INTO blacklist (token) VALUES (@token)');
+    await connection.close();
+}
+  
+  
+  
   
 module.exports = {
   createUser,
-  getUserByEmailAndPassword
+  getUserByEmailAndPassword,
+  Blacklist
 };
 
