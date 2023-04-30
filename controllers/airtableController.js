@@ -1,4 +1,4 @@
-const sql = require('mssql');
+/*const sql = require('mssql');
 const Airtable = require('airtable');
 
 const {
@@ -95,6 +95,8 @@ const intergrateNeed = async (req, res) => {
   }
 };*/
 
-module.exports = {
-    intergrateNeed
-  };
+// module.exports = {
+//     intergrateNeed
+//   };
+
+//  */ 

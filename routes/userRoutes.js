@@ -15,7 +15,7 @@ router.post('/login', loginUser);
 router.get('/profile', authenticateToken, (req, res) => {
     res.send(req.user);
 });
-router.post('/logout', logoutUser);
+router.post('/logout', authenticateToken, logoutUser);
 
 //logout user
 // router.post('/logout', logoutUser);

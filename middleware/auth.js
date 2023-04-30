@@ -1,13 +1,14 @@
 const jwt = require('jsonwebtoken');
-
-const secret = 'your-secret-key';
+const {
+    AUTH_KEY
+  } = require("../config/config");
 
 function generateToken(payload) {
-    return jwt.sign(payload, secret, { expiresIn: '1h' });
+    return jwt.sign(payload, AUTH_KEY, { expiresIn: '1h' });
 }
 
 function verifyToken(token) {
-    return jwt.verify(token, secret);
+    return jwt.verify(token, AUTH_KEY);
 }
 
 function authenticateToken(req, res, next) {

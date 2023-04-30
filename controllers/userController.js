@@ -1,4 +1,10 @@
 const bcrypt = require('bcrypt');
+const sql = require("mssql");
+const jwt = require('jsonwebtoken');
+const {
+    SECRET_KEY
+  } = require("../config/config");
+const { dbConfig } = require("../config/config");
 const { createUser, getUserByEmailAndPassword, Blacklist } = require('../models/userModel');
 const { generateToken } = require('../middleware/auth');
 
@@ -6,13 +12,9 @@ const { generateToken } = require('../middleware/auth');
 
 async function registerUser(req, res) {
     try {
-        const { id, name, email, password, organization, department, profession } = req.body;
-
-        if (!email.endsWith('regionh.dk') && !email.endsWith('dtu.dk')) {
-        return res.status(400).json({ message: 'Invalid email domain' });
-        }
-
-        const userId = await createUser({
+      const { id, name, email, password, organization, department, profession } = req.body;
+  
+      const userId = await createUser({
         id,
         name,
         email,
@@ -20,24 +22,25 @@ async function registerUser(req, res) {
         organization,
         department,
         profession
-        });
-
-        req.session.user = { email, role: profession === 'Health Care Professional' ? 'Admin' : 'User' };
-
-        res.status(201).json({
+      });
+  
+      const token = jwt.sign({ email, role: profession === 'Health Care Professional' ? 'Admin' : 'User' }, SECRET_KEY);
+  
+      res.status(201).json({
         userId,
-        message: 'Registration was successful'
-        });
+        message: 'Registration was successful',
+        token
+      });
     } catch (error) {
-        console.error(error);
-
-        if (error.message === 'Email already registered') {
-        return res.status(400).json({ message:'Email already registered' });
-        }
-
-        res.status(500).json({ message:'Internal server error' });
+      console.error(error);
+  
+      if (error.message === 'Email already registered') {
+        return res.status(400).json({ message: 'Email already registered' });
+      }
+  
+      res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
 
 
@@ -72,19 +75,19 @@ async function loginUser(req, res) {
     }
 }
   
-
-
 async function logoutUser(req, res) {
     try {
-        const authToken = req.headers.authorization.split(' ')[1]; //takes the token from the authorization header
-        await Blacklist(authToken); //token added to blacklist in database
-        res.status(200).send({ message: 'User logged out successfully' });
+      const token = req.headers.authorization.split(' ')[1];
+  
+      await Blacklist(token);
+  
+      res.send({ message: 'user is logged out' });
     } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: 'An error occurred while logging out' });
+      console.error(error);
+      res.sendStatus(500);
     }
 }
-
+  
 
 
 module.exports = {

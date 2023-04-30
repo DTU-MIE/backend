@@ -18,25 +18,19 @@ services:
       - /app/node_modules #anonymous volume
     environment:
       - NODE_ENV=development
-      - SESSION_SECRET=secret
-      - MSSQL_SA_PASSWORD=miepStrong(!)Password
-      - MSSQL_USER=sa
+      - SESSION_SECRET=${SESSION_SECRET}
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_USER=${MSSQL_USER}
+      - SECRET_KEY=${SECRET_KEY}
+      - AUTH_KEY=${AUTH_KEY}
+      - DATA_TABLE_NAME=${DATA_TABLE_NAME}
     command: npm run dev #you can also run node index.js
   sql:
     container_name: sql
     image: mcr.microsoft.com/azure-sql-edge
     environment:
-      ACCEPT_EULA: 1
-      MSSQL_SA_PASSWORD: miepStrong(!)Password
-      MSSQL_USER: sa
-      MSSQL_PID: Developer
-    # volumes:
-    #   - ./data:/var/opt/mssql/data
-    #   - ./log:/var/opt/mssql/log
-    #   - ./secrets:/var/opt/mssql/secrets
-#  mongo: 
-#    image: mongo
-#    environment:
-#      - MONGO_INITDB_ROOT_USERNAME=mie
-#      - MONGO_INITDB_ROOT_PASSWORD=miepassword
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_USER=${MSSQL_USER}
+      - MSSQL_PID=Developer
       

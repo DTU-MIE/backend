@@ -1,6 +1,6 @@
 -- Create a new database called 'dev_testdb1'
 -- Connect to the 'master' database to run this snippet
-USE mie
+USE master
 GO
 -- Create the new database if it does not exist already
 IF NOT EXISTS (
@@ -10,7 +10,7 @@ GO
 
 IF OBJECT_ID('NEED', 'U') IS NULL DROP TABLE NEED
 IF OBJECT_ID('USERS', 'U') IS NULL DROP TABLE USERS
----IF OBJECT_ID('BLACKLIST', 'U') IS NULL DROP TABLE BLACKLIST
+IF OBJECT_ID('BLACKLIST', 'U') IS NULL DROP TABLE BLACKLIST
 ----DROP TABLE IF EXISTS USERS
 
 GO

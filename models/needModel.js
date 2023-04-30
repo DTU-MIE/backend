@@ -1,27 +1,11 @@
 const sql = require("mssql");
 
-const {
-    MSSQL_USER,
-    MSSQL_SA_PASSWORD,
-    MSSQL_HOST
-  } = require("../config/config");
+const { dbConfig } = require("../config/config");
 
-const dbConfig = {  
-    database: "mie",
-    server: "sql",
-    host: MSSQL_HOST || "localhost",
-    user: MSSQL_USER, 
-    password: MSSQL_SA_PASSWORD, 
-    enableArithAbort: true,
-    Encrypt:true,
-    trustServerCertificate: true,
-    port: 1433
-
-};  
-
-const pool = new sql.ConnectionPool(dbConfig);
 
 async function insertNeed(need) {
+
+  const pool = new sql.ConnectionPool(dbConfig);
   await pool.connect();
   const request = pool.request();
   request
@@ -37,22 +21,26 @@ async function insertNeed(need) {
     VALUES (@NeedIs, @Title, @ContactPerson, @FileData, @FileName, @extension, @createdAt);
     SELECT SCOPE_IDENTITY() AS id;
   `);
+  await pool.close();
   return result.recordset[0].id;
 }
 
 async function getNeedById(id) {
+  const pool = new sql.ConnectionPool(dbConfig);
   await pool.connect();
   const request = pool.request();
   request.input('id', sql.Int, id);
   const result = await request.query(`
     SELECT * FROM NEED WHERE ID = @id;
   `);
+  await pool.close();
   return result.recordset[0];
 }
 
 const getAllNeeds = async () => {
   try {
     const pool = await sql.connect(dbConfig);
+    await pool.connect();
     const result = await pool.request().query('SELECT * FROM NEED');
     return result.recordset;
   } catch (err) {
