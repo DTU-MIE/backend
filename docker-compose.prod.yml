@@ -16,6 +16,7 @@ services:
         NODE_ENV: production
     environment:
       - NODE_ENV=production
+      - MSSQL_HOST=${MSSQL_HOST}
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - MSSQL_USER=${MSSQL_USER}
       - SECRET_KEY=${SECRET_KEY}

@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
 
 const MSSQL_HOST = process.env.MSSQL_HOST || "localhost";
+console.log(process.env.MSSQL_HOST)
 const MSSQL_USER = process.env.MSSQL_USER;
 const MSSQL_SA_PASSWORD = process.env.MSSQL_SA_PASSWORD;
 const SECRET_KEY = process.env.SECRET_KEY;

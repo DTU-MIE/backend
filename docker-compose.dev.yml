@@ -19,6 +19,7 @@ services:
     environment:
       - NODE_ENV=development
       - SESSION_SECRET=${SESSION_SECRET}
+      - MSSQL_HOST=${MSSQL_HOST}
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - MSSQL_USER=${MSSQL_USER}
       - SECRET_KEY=${SECRET_KEY}
