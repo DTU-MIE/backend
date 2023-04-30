@@ -21,7 +21,7 @@ console.log(SESSION_SECRET)
 // const API_KEY= process.env.API_KEY || 'keyEavRBNRoSft45f';
 // const BASE_KEY= process.env.BASE_KEY || 'appJoZMNg6B5pJ9lN';
 const dbConfig = {  
-
+    database: "mie",
     server: "sql",
     host: MSSQL_HOST,
     user: MSSQL_USER, 
@@ -35,7 +35,7 @@ const dbConfig = {
 
 const config = {  
     server: "sql",
-
+    database: "mie",
     host: MSSQL_HOST,
     user: MSSQL_USER, 
     password: MSSQL_SA_PASSWORD, 
