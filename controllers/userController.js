@@ -24,7 +24,8 @@ async function registerUser(req, res) {
         profession
       });
   
-      const token = jwt.sign({ email, role: profession === 'Health Care Professional' ? 'Admin' : 'User' }, SECRET_KEY);
+      const token = jwt.sign({ email, role: profession === 'Sundhedsprofessionel' ? 'Admin' : profession === 'studerende' ? 'User' : 'Unknown' }, SECRET_KEY);
+
   
       res.status(201).json({
         userId,
@@ -51,13 +52,13 @@ async function loginUser(req, res) {
         const user = await getUserByEmailAndPassword(email, password);
 
         if (!user) {
-            return res.status(401).send({ message:'user does not exist' });
+            return res.status(401).send({ message:'Incorrect email or password' });
         }
 
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
-            return res.status(401).send({ message:'Password is wrong' });
+            return res.status(401).send({ message:'Incorrect email or password' });
         }
 
         const tokenPayload = {
