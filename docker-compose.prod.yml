@@ -15,10 +15,12 @@ services:
       args: 
         NODE_ENV: production
     environment:
-      - NODE_ENV=development
-      - SESSION_SECRET=${SESSION_SECRET}
+      - NODE_ENV=production
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - MSSQL_USER=${MSSQL_USER}
+      - SECRET_KEY=${SECRET_KEY}
+      - AUTH_KEY=${AUTH_KEY}
+      - DATA_TABLE_NAME=${DATA_TABLE_NAME}
     command: node index.js
   sql:
     container_name: sql
