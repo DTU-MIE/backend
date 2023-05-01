@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken} = require('../middleware/auth');
+//const { authenticateToken} = require('../middleware/auth');
 const {
   registerUser,
   loginUser,
@@ -15,7 +15,7 @@ router.post('/login', loginUser);
 router.get('/profile', authenticateToken, (req, res) => {
     res.send(req.user);
 });
-router.post('/logout', authenticateToken, logoutUser);
+router.post('/logout', logoutUser);
 
 //logout user
 // router.post('/logout', logoutUser);
