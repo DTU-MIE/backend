@@ -9,6 +9,9 @@ services:
     image: amandajkofoed/innocloud
     ports:
       - "3000:3000"
+    networks:
+      custom-network:
+        ipv4_address: 172.20.0.2
   node-app:
     build:
       context: .
@@ -23,6 +26,9 @@ services:
       - AUTH_KEY=${AUTH_KEY}
       - DATA_TABLE_NAME=${DATA_TABLE_NAME}
     command: node index.js
+    networks:
+      custom-network:
+        ipv4_address: 172.20.0.3
   sql:
     container_name: sql
     image: mcr.microsoft.com/azure-sql-edge
@@ -31,3 +37,13 @@ services:
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - MSSQL_USER=${MSSQL_USER}
       - MSSQL_PID=Developer
+    networks:
+      custom-network:
+        ipv4_address: 172.20.0.4
+networks:
+  custom-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
