@@ -2,12 +2,12 @@ const mime = require('mime');
 const model =  require('../models/needModel')
 
 async function createNeed(req, res) {
-  const {NeedIs, Title, ContactPerson} = req.body;
+  const {NeedIs, Title, ContactPerson, Keywords, Proposal, Solution} = req.body;
   const FileData = req.file ? Buffer.from(req.file.buffer) : null;
   const FileName = req.file ? req.file.originalname : null;
   const extension = FileName ? FileName.split('.').pop() : null;
   const createdAt = new Date();
-  const id = await model.insertNeed({NeedIs, Title, ContactPerson, FileData, FileName, extension, createdAt});
+  const id = await model.insertNeed({NeedIs, Title, ContactPerson, Keywords, Proposal, Solution, FileData, FileName, extension, createdAt});
   return res.json({ id });
 }
 
@@ -25,6 +25,9 @@ const getNeed = async (req, res) => {
       NeedIs: need.NeedIs,
       Title: need.Title,
       ContactPerson: need.ContactPerson,
+      Keywords: need.Keywords,
+      Proposal: need.Proposal, 
+      Solution: need.Solution, 
       CreatedAt: need.CreatedAt,
     };
 
@@ -67,6 +70,9 @@ const allNeeds = async (req, res) => {
         Title: need.Title,
         ContactPerson: need.ContactPerson,
         CreatedAt: need.CreatedAt,
+        Keywords: need.Keywords,
+        Proposal: need.Proposal, 
+        Solution: need.Solution, 
         fileURL: `<a href="${fileURL}">${need.FileName}</a>`,
       };
     });

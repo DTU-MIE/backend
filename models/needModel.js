@@ -12,13 +12,16 @@ async function insertNeed(need) {
   .input('NeedIs', sql.NVarChar(50), need.NeedIs)
   .input('Title', sql.NVarChar(255), need.Title)
   .input('ContactPerson', sql.NVarChar(255), need.ContactPerson)
+  .input('Keywords', sql.NVarChar(255), need.Keywords)
+  .input('Proposal', sql.NVarChar(1000), need.Proposal)
+  .input('Solution', sql.NVarChar(1000), need.Solution)
   .input('FileData', sql.VarBinary(sql.MAX), need.FileData)
   .input('FileName', sql.NVarChar(255), need.FileName)
   .input('extension', sql.NVarChar(10), need.extension)
   .input('createdAt', sql.DateTime, need.createdAt);
   const result = await request.query(`
-    INSERT INTO NEED (NeedIs, Title, ContactPerson, FileData, FileName, extension, CreatedAt)
-    VALUES (@NeedIs, @Title, @ContactPerson, @FileData, @FileName, @extension, @createdAt);
+    INSERT INTO NEED (NeedIs, Title, ContactPerson, Keywords, Proposal, Solution, FileData, FileName, extension, CreatedAt)
+    VALUES (@NeedIs, @Title, @ContactPerson, @Keywords, @Proposal, @Solution, @FileData, @FileName, @extension, @createdAt);
     SELECT SCOPE_IDENTITY() AS id;
   `);
   await pool.close();
