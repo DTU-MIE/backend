@@ -9,9 +9,6 @@ services:
     image: amandajkofoed/innocloud
     ports:
       - "3000:3000"
-    networks:
-      custom-network:
-        ipv4_address: 172.20.0.2
   node-app:
     build:
       context: .
@@ -34,10 +31,3 @@ services:
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - MSSQL_USER=${MSSQL_USER}
       - MSSQL_PID=Developer
-networks:
-  custom-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
-          gateway: 172.20.0.1
