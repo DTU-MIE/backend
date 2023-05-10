@@ -14,7 +14,7 @@ const createNeedSpec = YAML.load('./swagger/createNeed.yaml');
 const getNeedSpec = YAML.load('./swagger/getNeed.yaml');
 const downloadFileSpec = YAML.load('./swagger/downloadFile.yaml');
 const _ = require('lodash');
-const commentRoutes = require('./routes/commentRoutes');
+//const commentRoutes = require('./routes/commentRoutes');
 
 
 const apiSpec = _.merge({}, createNeedSpec, getNeedSpec, downloadFileSpec);
@@ -89,7 +89,7 @@ app.use('/api/v1/', needRoutes);
 //app.use('/api/v1/', airtableI);
 app.use('/api/v1/', userRoutes);
 app.use('/api/v1/', searchRoutes);
-app.use('/api/v1/', commentRoutes);
+//app.use('/api/v1/', commentRoutes);
 app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(apiSpec));
 const port = process.env.PORT || 3002;
 app.listen(port, () => console.log(`listening on port ${port}`));
