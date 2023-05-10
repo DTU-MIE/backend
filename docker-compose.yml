@@ -2,24 +2,44 @@ version: "3"
 services:
   frontend:
     container_name: frontend
-    image: amandajkofoed/innocloud
+    image: amandajkofoed/innocloud2:latest
     ports:
       - "3000:3000"
   node-app:
     build: .
     environment:
       - PORT=3002
+      - NODE_ENV=development
+      - SESSION_SECRET=${SESSION_SECRET}
+      - MSSQL_HOST=${MSSQL_HOST}
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_USER=${MSSQL_USER}
+      - SECRET_KEY=${SECRET_KEY}
+      - AUTH_KEY=${AUTH_KEY}
+      - DATA_TABLE_NAME=${DATA_TABLE_NAME}
     depends_on:
       - sql
+
   sql:
     container_name: sql
     image: mcr.microsoft.com/azure-sql-edge
     ports:
       - "1433:1433"
     environment:
-      ACCEPT_EULA: 1
-      MSSQL_PID: Developer
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_USER=${MSSQL_USER}
+      - MSSQL_PID=Developer
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    ports:
+      - "1434:1433"      
+    depends_on:
+      - sql
 
-  # redis: 
+
+  # redis:
   #   image: redis
 
