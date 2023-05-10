@@ -51,7 +51,8 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 }, cors({
-  origin: ['http://localhost:5173', 'http://innocloud.dk/api', 'https://innocloud.dk/api'],
+  origin: ['http://localhost:5173', 'http://innocloud.dk/api', 'https://innocloud.dk/api', 'https://130.225.170.197/api',
+  'https://130.225.170.197/api', 'http://www.innocloud.dk/api', 'https://www.innocloud.dk/api' ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
