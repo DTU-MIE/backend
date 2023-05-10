@@ -53,8 +53,7 @@ app.use((req, res, next) => {
 }, cors({
   origin: ['http://localhost:5173', 'http://innocloud.dk/api', 'https://innocloud.dk/api'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200 
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
   
