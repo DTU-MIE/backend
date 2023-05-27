@@ -13,12 +13,11 @@ jest.mock('../models/needModel', () => ({
 // Mock the authentication module
 jest.mock('../middleware/auth', () => ({
   authenticateToken: jest.fn((req, res, next) => {
-    req.user = { userId: 123 }; // Set a dummy user object for testing
-    next(); // Call the next middleware function
+    req.user = { userId: 123 }; 
+    next(); 
   }),
 }));
 
-// Set up the test route
 app.use(express.json());
 app.use('/api/v1/', needRoutes);
 

@@ -1,4 +1,3 @@
-// Import necessary dependencies and modules
 const sql = require('mssql');
 const { updateNeed } = require('../models/needModel');
 
@@ -6,7 +5,7 @@ jest.mock('mssql');
 
 describe('updateNeed', () => {
   it('should update the need in the database', async () => {
-    // Mock data
+
     const id = 1;
     const updatedNeed = {
       NeedIs: 'New Need',
@@ -21,7 +20,7 @@ describe('updateNeed', () => {
       createdAt: new Date(),
     };
 
-    // Mock SQL connection and request
+
     const mockInput = jest.fn().mockReturnThis();
     const mockQuery = jest.fn().mockResolvedValue({ recordset: [] });
     const mockClose = jest.fn();
@@ -36,10 +35,10 @@ describe('updateNeed', () => {
       close: mockClose,
     });
 
-    // Call the function
+
     const result = await updateNeed(id, updatedNeed);
 
-    // Assertions
+
     expect(sql.connect).toHaveBeenCalled();
 
     expect(mockRequest).toHaveBeenCalled();
@@ -67,7 +66,7 @@ describe('updateNeed', () => {
   });
 
   it('should throw an error if update fails', async () => {
-    // Mock data
+
     const id = 1;
     const updatedNeed = {
       NeedIs: 'New Need',
@@ -85,7 +84,6 @@ describe('updateNeed', () => {
     // Mock SQL connection to throw an error
     sql.connect.mockRejectedValue(new Error('Connection failed'));
 
-    // Call the function and assert the error
     await expect(updateNeed(id, updatedNeed)).rejects.toThrow('Connection failed');
   });
 });
@@ -95,14 +93,14 @@ describe('Controller', () => {
 
     const model = require('../models/needModel');
     const controller = require('../controllers/needController');
-        // Mock updateNeed function in needModel module
+
     jest.mock('../models/needModel', () => ({
         updateNeed: jest.fn(),
     }));
       
     describe('updated', () => {
       it('should update the need and return a success message', async () => {
-        // Mock Express request and response objects
+
         const req = {
           params: { id: 1 },
           body: {
@@ -123,13 +121,12 @@ describe('Controller', () => {
           status: jest.fn().mockReturnThis(),
         };
 
-        // Mock model.updateNeed function
         model.updateNeed.mockResolvedValue();
   
-        // Call the function
+
         await controller.updated(req, res);
   
-        // Assertions
+
         expect(model.updateNeed).toHaveBeenCalledWith(expect.any(Number), {
           NeedIs: 'New Need',
           Title: 'Updated Title',
@@ -147,7 +144,7 @@ describe('Controller', () => {
       });
   
       it('should handle error and return a 500 status code', async () => {
-        // Mock Express request and response objects
+  
         const req = {
           params: { id: 1 },
           body: {
@@ -164,10 +161,10 @@ describe('Controller', () => {
           status: jest.fn().mockReturnThis(),
         };
   
-        // Mock model.updateNeed function to throw an error
+ 
         model.updateNeed.mockRejectedValue(new Error('Update failed'));
   
-        // Call the function
+
         await controller.updated(req, res);
   
         // Assertions

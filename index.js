@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 //let RedisStore = require("connect-redis").default;
 
-const userRoutes = require('./routes/userRoutes');
+//const userRoutes = require('./routes/userRoutes');
 const needRoutes = require('./routes/needRoutes');
 const airtableI = require('./routes/airtableRoutes');
 const searchRoutes = require('./routes/searchRoutes');
@@ -88,7 +88,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1/', needRoutes);
 app.use('/api/v1/', airtableI);
-app.use('/api/v1/', userRoutes);
+//app.use('/api/v1/', userRoutes);
 app.use('/api/v1/', searchRoutes);
 app.use('/api/v1/', commentRoutes);
 app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(apiSpec));

@@ -63,7 +63,6 @@ describe("search function", () => {
         { ContactPerson: "Jane", Title: "Title 2", NeedIs: "Need 2", CreatedAt: "2023-01-02" },
       ]);
     } catch (error) {
-      // Handle any errors here
      
     }
   })

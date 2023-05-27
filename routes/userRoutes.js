@@ -10,12 +10,12 @@ const {
 //register user
 router.post('/register', registerUser);
 //login user
-router.post('/login', loginUser);
+//router.post('/login', loginUser);
 
-router.get('/profile', authenticateToken, (req, res) => {
+/*router.get('/profile', authenticateToken, (req, res) => {
     res.send(req.user);
-});
-router.post('/logout', authenticateToken, logoutUser);
+});*/
+//router.post('/logout', authenticateToken, logoutUser);
 
 //logout user
 // router.post('/logout', logoutUser);

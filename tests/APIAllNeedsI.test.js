@@ -14,14 +14,14 @@ const mockNeeds = [
 ];
 
 jest.mock('../config/config', () => ({
-  AUTH_KEY: 'test-auth-key', // Mocked value for AUTH_KEY
+  AUTH_KEY: 'test-auth-key', 
 }));
 
 // Mock the authentication module
 jest.mock('../middleware/auth', () => ({
   authenticateToken: jest.fn((req, res, next) => {
-    req.user = { userId: 123 }; // Set a dummy user object for testing
-    next(); // Call the next middleware function
+    req.user = { userId: 123 }; 
+    next(); 
   }),
 }));
 

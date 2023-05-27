@@ -30,7 +30,6 @@ describe('downloadFile', () => {
       FileName: 'test_file.txt',
     };
 
-    // Mock the getNeedById function
     model.getNeedById = jest.fn().mockResolvedValueOnce(mockNeed);
   });
 
@@ -41,7 +40,7 @@ describe('downloadFile', () => {
   test('should download the file if it exists', async () => {
     await downloadFile(mockRequest, mockResponse);
 
-    // Verify the expectations
+
     expect(model.getNeedById).toHaveBeenCalledTimes(1);
     expect(model.getNeedById).toHaveBeenCalledWith(1);
 
@@ -67,7 +66,7 @@ describe('downloadFile', () => {
 
     await downloadFile(mockRequest, mockResponse);
 
-    // Verify the expectations
+
     expect(model.getNeedById).toHaveBeenCalledTimes(1);
     expect(model.getNeedById).toHaveBeenCalledWith(1);
 

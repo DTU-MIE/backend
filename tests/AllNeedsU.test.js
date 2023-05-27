@@ -35,7 +35,7 @@ describe('All Needs Unit Test', () => {
       },
     ];
 
-    // Mock the database connection and query execution
+    //Mock the database connection and query execution
     const mockPool = {
       request: jest.fn().mockReturnThis(),
       query: jest.fn().mockResolvedValueOnce({ recordset: mockNeeds }),
@@ -45,7 +45,7 @@ describe('All Needs Unit Test', () => {
     const sqlMock = require('mssql');
     sqlMock.connect = mockConnect;
 
-    // Mock the request and response objects
+    //Mock the request and response objects
     const mockRequest = {
       protocol: 'http',
       headers: { host: 'localhost:3002' },
@@ -55,10 +55,10 @@ describe('All Needs Unit Test', () => {
       json: mockJson,
     };
 
-    // Call the controller function
+    //Call the controller function
     await controller.allNeeds(mockRequest, mockResponse);
 
-    // Verify the expectations
+    //Verify the expectations
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockPool.request).toHaveBeenCalledTimes(1);
     expect(mockPool.query).toHaveBeenCalledTimes(1);
@@ -96,7 +96,7 @@ describe('All Needs Unit Test', () => {
 
 
   test('should return all needs with "no file" if file does not exist', async () => {
-    // Mock the result of getAllNeeds
+    //Mock the result of getAllNeeds
     const mockNeeds = [
       {
         id: 1,
@@ -111,10 +111,10 @@ describe('All Needs Unit Test', () => {
       },
     ];
 
-    // Mock the getAllNeeds function
+    //Mock the getAllNeeds function
     model.getAllNeeds = jest.fn().mockResolvedValueOnce(mockNeeds);
 
-    // Mock the request and response objects
+    //Mock the request and response objects
     const mockRequest = {
       protocol: 'http',
       headers: { host: 'localhost:3002' },

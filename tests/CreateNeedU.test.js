@@ -5,9 +5,6 @@ jest.mock('mssql');
 const model = require('../models/needModel');
 const needController = require('../controllers/needController');
 
-
-
-
 describe('insertNeed', () => {
     test('should insert a new need and return the ID', async () => {
       const need = {

@@ -3,10 +3,10 @@ const request = require('supertest');
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = require('../routes/needRoutes');
-const app = express(); // Assuming your Express app is defined in index.js
-const model = require('../models/needModel'); // Assuming your model functions are defined in needModel.js
-const needController = require('../controllers/needController'); // Replace '../controllers/needController' with the correct path to your needController module
-const config = require('../config/config'); // Assuming you have a config file with AUTH_KEY defined
+const app = express(); 
+const model = require('../models/needModel'); 
+const needController = require('../controllers/needController'); 
+const config = require('../config/config'); 
 
 const mockNeed = {
   ID: 1,
@@ -18,19 +18,19 @@ const mockNeed = {
 jest.mock('../models/needModel', () => ({
   getNeedById: jest.fn((id) => {
     console.log('getNeedById called with id:', id);
-    const needId = parseInt(id, 10); // Parse the id parameter as a number
+    const needId = parseInt(id, 10); 
     return { ...mockNeed, ID: needId };
   }),
 }));
 
 // Mock the config module
 jest.mock('../config/config', () => ({
-  AUTH_KEY: 'mocked_auth_key', // Mocked value for AUTH_KEY
+  AUTH_KEY: 'mocked_auth_key', 
 }));
 
 // Mock the Express route
 router.get('/download/:id', (req, res) => {
-  return needController.downloadFile(req, res); // Call the controller function
+  return needController.downloadFile(req, res); 
 });
 
 // Use the router in the Express app

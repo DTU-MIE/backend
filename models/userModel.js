@@ -15,7 +15,6 @@ const { dbConfig } = require("../config/config");
 async function createUser(userDetails) {
 
     const pool = new sql.ConnectionPool(dbConfig);
-    console.log(pool);
     await pool.connect();
   
     try {
@@ -63,7 +62,7 @@ async function createUser(userDetails) {
   }
   
    
-  
+/*  
 async function getUserByEmailAndPassword(email, password) {
     console.log('email:', email, 'password:', password);
     const pool = await sql.connect(dbConfig);
@@ -99,10 +98,10 @@ async function Blacklist(token) {
     await request.query('INSERT INTO blacklist (token) VALUES (@token)');
     await connection.close();
 }
-  
+ */ 
 module.exports = {
   createUser,
-  getUserByEmailAndPassword,
-  Blacklist
+  //getUserByEmailAndPassword,
+  //Blacklist
 };
 

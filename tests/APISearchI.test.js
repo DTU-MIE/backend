@@ -7,7 +7,7 @@ jest.mock('../controllers/searchController', () => ({
     search: jest.fn(),
   }));
   jest.mock('../config/config', () => ({
-    AUTH_KEY: 'test-auth-key', // Mocked value for AUTH_KEY
+    AUTH_KEY: 'test-auth-key', 
   }));  
 
 
@@ -55,7 +55,7 @@ describe('GET /search', () => {
   
       // Handle any errors here
       if (response.status !== 200) {
-        // Handle error cases
+        //Handle error cases
       }
     });
   });
