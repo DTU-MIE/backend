@@ -1,26 +1,6 @@
-/*const sql = require('mssql');
+const sql = require('mssql');
 const Airtable = require('airtable');
-
-const {
-    MSSQL_USER,
-    MSSQL_SA_PASSWORD,
-    MSSQL_HOST,
-    API_KEY,
-    BASE_KEY
-  } = require("../config/config");
-
-const dbConfig = {  
-    database: "mie",
-    server: "sql",
-    host: MSSQL_HOST || "localhost",
-    user: MSSQL_USER, 
-    password: MSSQL_SA_PASSWORD, 
-    enableArithAbort: true,
-    Encrypt:true,
-    trustServerCertificate: true,
-    port: 1433
-
-};  
+const { dbConfig, API_KEY, BASE_KEY } = require("../config/config");
 
 // Airtable credentials and base information
 const base = new Airtable({ apiKey: API_KEY }).base(BASE_KEY);
@@ -38,19 +18,24 @@ const intergrateNeed = async (req, res) => {
     records.forEach(async (record) => {
     await pool.connect();
     const request = pool.request();
-    const fileData = Buffer.from(record.get('FileData')[0].url);
-    const fileName = record.get('FileData')[0].filename;
-    const fileExtension = fileName.split('.').pop();
+    const fileData = record.get('FileData') ? Buffer.from(record.get('FileData')[0].url) : null;
+    const fileName = record.get('FileData') ? record.get('FileData')[0].filename : null;    
+    const fileExtension = fileName ? fileName.split('.').pop() : null;
 
     request
     .input('NeedIs', record.get('NeedIs'))
     .input('Title', record.get('Title'))
     .input('ContactPerson', record.get('ContactPerson'))
+    .input('Keywords', record.get('Keywords'))
+    .input('Proposal', record.get('Proposal')) 
+    .input('Solution', record.get('Solution'))
     .input('FileData', fileData)
     .input('FileName', fileName)
     .input('extension', fileExtension); 
     // input for each field 
-    const query = `INSERT INTO NEED (NeedIs, Title, ContactPerson, FileData, FileName, extension) VALUES (@NeedIs, @Title, @ContactPerson, @FileData, @FileName, @extension)`;
+    const query = `INSERT INTO NEED (NeedIs, Title, ContactPerson, Keywords,
+      Proposal, Solution, FileData, FileName, extension) VALUES (@NeedIs, @Title, @ContactPerson, @Keywords,
+        @Proposal, @Solution, CONVERT(varbinary(max), @FileData), @FileName, @extension)`;
     await request.query(query);
     });
     res.status(200).send('Data for mie transferred successfully');
@@ -95,8 +80,8 @@ const intergrateNeed = async (req, res) => {
   }
 };*/
 
-// module.exports = {
-//     intergrateNeed
-//   };
+module.exports = {
+     intergrateNeed
+   };
 
 //  */ 

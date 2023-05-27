@@ -3,16 +3,17 @@ const sql = require("mssql");
 const { dbConfig } = require("../config/config");
 
 
+
 async function insertNeed(need) {
 
   const pool = new sql.ConnectionPool(dbConfig);
   await pool.connect();
   const request = pool.request();
   request
-  .input('NeedIs', sql.NVarChar(50), need.NeedIs)
-  .input('Title', sql.NVarChar(255), need.Title)
-  .input('ContactPerson', sql.NVarChar(255), need.ContactPerson)
-  .input('Keywords', sql.NVarChar(255), need.Keywords)
+  .input('NeedIs', sql.NVarChar(4000), need.NeedIs)
+  .input('Title', sql.NVarChar(1000), need.Title)
+  .input('ContactPerson', sql.NVarChar(1000), need.ContactPerson)
+  .input('Keywords', sql.NVarChar(1000), need.Keywords)
   .input('Proposal', sql.NVarChar(1000), need.Proposal)
   .input('Solution', sql.NVarChar(1000), need.Solution)
   .input('FileData', sql.VarBinary(sql.MAX), need.FileData)
@@ -29,32 +30,60 @@ async function insertNeed(need) {
 }
 
 async function getNeedById(id) {
-  const pool = new sql.ConnectionPool(dbConfig);
-  await pool.connect();
-  const request = pool.request();
-  request.input('id', sql.Int, id);
-  const result = await request.query(`
-    SELECT * FROM NEED WHERE ID = @id;
-  `);
-  await pool.close();
-  return result.recordset[0];
+    const pool = await sql.connect(dbConfig);
+    const request = pool.request();
+    request.input('id', sql.Int, id);
+    const result = await request.query(`
+      SELECT *,
+      CASE WHEN FileData IS NULL THEN 'no file' ELSE 'file' END AS HasFile
+      FROM NEED
+      WHERE ID = @id;
+    `);
+    await pool.close();
+    return result.recordset[0];
 }
 
+
 const getAllNeeds = async () => {
-  try {
     const pool = await sql.connect(dbConfig);
-    await pool.connect();
-    const result = await pool.request().query('SELECT * FROM NEED');
+    const result = await pool.request().query(`
+      SELECT *,
+        CASE WHEN FileData IS NULL THEN 'no file' ELSE 'file' END AS HasFile
+      FROM NEED
+    `);
+    await pool.close();
     return result.recordset;
-  } catch (err) {
-    console.error(err);
-  } finally {
-    sql.close();
-  }
 };
+
+const updateNeed = async (id, updatedNeed) => {
+    const pool = await sql.connect(dbConfig);
+    const request = pool.request();
+    request.input('NeedIs', sql.NVarChar(4000), updatedNeed.NeedIs);
+    request.input('Title', sql.NVarChar(1000), updatedNeed.Title);
+    request.input('ContactPerson', sql.NVarChar(1000), updatedNeed.ContactPerson);
+    request.input('Keywords', sql.NVarChar(1000), updatedNeed.Keywords);
+    request.input('Proposal', sql.NVarChar(1000), updatedNeed.Proposal);
+    request.input('Solution', sql.NVarChar(1000), updatedNeed.Solution);
+    request.input('FileData', sql.VarBinary(sql.MAX), updatedNeed.FileData);
+    request.input('FileName', sql.NVarChar(255), updatedNeed.FileName);
+    request.input('extension', sql.NVarChar(10), updatedNeed.extension);
+    request.input('createdAt', sql.DateTime, updatedNeed.createdAt);
+    request.input('id', sql.Int, id);
+
+    const query = `UPDATE NEED SET NeedIs = @NeedIs, Title = @Title, ContactPerson = @ContactPerson,
+      Keywords = @Keywords, Proposal = @Proposal, Solution = @Solution, FileData = @FileData,
+      FileName = @FileName, extension = @extension, createdAt = @createdAt WHERE id = @id`;
+
+    const result = await request.query(query);
+    await pool.close();
+    return result.recordset;
+};
+
+
 
 module.exports = {
   insertNeed,
   getNeedById,
-  getAllNeeds
+  getAllNeeds,
+  updateNeed
 };

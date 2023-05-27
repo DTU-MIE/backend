@@ -14,18 +14,19 @@ function verifyToken(token) {
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-
+  
     if (!token) {
-        return res.sendStatus(401);
+      return res.status(401).json({ message: 'No token provided' });
     }
-
+  
     try {
-        req.user = verifyToken(token);
-        next();
+      req.user = verifyToken(token);
+      next();
     } catch (error) {
-        res.sendStatus(403);
+      return res.status(403).json({ message: 'Invalid token' });
     }
-}
+  }
+  
 
 
 //   // authorize user only access certain endpoint, but for now there is no privilages assigneed

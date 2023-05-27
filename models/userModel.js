@@ -1,10 +1,6 @@
 const bcrypt = require('bcrypt');
 const sql = require("mssql");
-//const dotenv = require('dotenv');
 
-// configraration with env. 
-//dotenv.config({ path: '../.env' });
-//const { dbConfig } = require("../config/config");
 class BadRequestError extends Error {
     constructor(message) {
       super(message);
@@ -13,24 +9,7 @@ class BadRequestError extends Error {
     }
   }
 const saltRounds = 10;
-// const {
-//     MSSQL_USER,
-//     MSSQL_SA_PASSWORD,
-//     MSSQL_HOST
-//   } = require("../config/config");
 
-// const dbConfig = {  
-//     database: "mie",
-//     server: "sql",
-//     host: MSSQL_HOST || "localhost",
-//     user: MSSQL_USER, 
-//     password: MSSQL_SA_PASSWORD, 
-//     enableArithAbort: true,
-//     Encrypt:true,
-//     trustServerCertificate: true,
-//     port: 1433
-
-// }; 
 const { dbConfig } = require("../config/config");
 
 async function createUser(userDetails) {
