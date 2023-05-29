@@ -10,7 +10,7 @@ const {
 //register user
 router.post('/register', registerUser);
 //login user
-//router.post('/login', loginUser);
+router.post('/login', loginUser);
 
 /*router.get('/profile', authenticateToken, (req, res) => {
     res.send(req.user);

@@ -8,8 +8,6 @@ const { dbConfig } = require("../config/config");
 const { createUser, getUserByEmailAndPassword, Blacklist } = require('../models/userModel');
 const { generateToken } = require('../middleware/auth');
 
-
-
 async function registerUser(req, res) {
     try {
       const { id, name, email, password, organization, department, profession } = req.body;
@@ -25,7 +23,12 @@ async function registerUser(req, res) {
       });
   
       const token = jwt.sign({ email, role: profession === 'Sundhedsprofessionel' ? 'Admin' : profession === 'studerende' ? 'User' : 'Unknown' }, SECRET_KEY);
+      console.log('Received registration request:', req.body);
 
+      // ... rest of the code ...
+  
+      console.log('User created:', userId);
+      console.log('Token generated:', token);
   
       res.status(201).json({
         userId,
@@ -33,18 +36,16 @@ async function registerUser(req, res) {
         token
       });
     } catch (error) {
-      console.error(error);
-  
       if (error.message === 'Email already registered') {
         return res.status(400).json({ message: 'Email already registered' });
       }
-  
+      console.log('Error:', error); 
       res.status(500).json({ message: 'Internal server error' });
     }
 };
 
 
-/*
+
 async function loginUser(req, res) {
     const { email, password } = req.body;
 
@@ -75,7 +76,7 @@ async function loginUser(req, res) {
         res.status(500).send({ message:'Error occurred while logging in' });
     }
 }
-  
+/*  
 async function logoutUser(req, res) {
     try {
       const token = req.headers.authorization.split(' ')[1];
@@ -93,6 +94,6 @@ async function logoutUser(req, res) {
 
 module.exports = {
   registerUser,
-  //loginUser,
+  loginUser,
   //logoutUser
 };

@@ -13,6 +13,7 @@ const saltRounds = 10;
 const { dbConfig } = require("../config/config");
 
 async function createUser(userDetails) {
+  console.log("🥺");
 
     const pool = new sql.ConnectionPool(dbConfig);
     await pool.connect();
@@ -22,7 +23,7 @@ async function createUser(userDetails) {
       const emailExists = await pool.request()
         .input('email', sql.NVarChar(50), userDetails.email)
         .query('SELECT COUNT(*) as count FROM USERS WHERE email = @email');
-  
+        console.log('emailExists:', emailExists);
       if (emailExists.recordset[0].count > 0) {
         throw new BadRequestError('Email already registered');
       }
@@ -54,15 +55,19 @@ async function createUser(userDetails) {
           VALUES (@name, @email, @password, @organization, @department, @profession);
           SELECT SCOPE_IDENTITY() AS id;
       END`);
-  
+
       return result.recordset[0].id;
-    } finally {
+    } catch (error) {
+      console.log('Error:', error);
+      throw error;
+    }
+     finally {
       pool.close();
     }
   }
   
    
-/*  
+
 async function getUserByEmailAndPassword(email, password) {
     console.log('email:', email, 'password:', password);
     const pool = await sql.connect(dbConfig);
@@ -90,7 +95,7 @@ async function getUserByEmailAndPassword(email, password) {
     }
 }
   
-  
+/*  
 async function Blacklist(token) {
     const connection = await sql.connect(dbConfig);
     const request = connection.request();
@@ -101,7 +106,7 @@ async function Blacklist(token) {
  */ 
 module.exports = {
   createUser,
-  //getUserByEmailAndPassword,
+  getUserByEmailAndPassword,
   //Blacklist
 };
 
