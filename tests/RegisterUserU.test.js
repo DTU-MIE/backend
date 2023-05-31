@@ -46,7 +46,7 @@ describe('registerUser', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  it('should register a user type Sundhedsprofessionel and return a token', async () => {
+  it('Register a user type Sundhedsprofessionel and return a token', async () => {
     try {
       const req = {
         body: {
@@ -84,7 +84,7 @@ describe('registerUser', () => {
     }
   });
   
-  it('should register a user type studerende and return a token', async () => {
+  it('register a user type studerende and return token', async () => {
     try {
       const req = {
         body: {
@@ -122,7 +122,7 @@ describe('registerUser', () => {
     }
   });
 
-  it('should register a user type Unknown and return a token', async () => {
+  it('register a user type Unknown, return token', async () => {
     try {
       const req = {
         body: {
@@ -161,7 +161,7 @@ describe('registerUser', () => {
   });
   
   
-  it('should return an error if the email is already registered', async () => {
+  it('if the email is already registered return an error ', async () => {
     req.body.email = 'arooj@dtu.dk';
 
     try {
@@ -173,7 +173,7 @@ describe('registerUser', () => {
       expect(jwt.sign).not.toHaveBeenCalled();
     }
   });
-  it('should return a 500 error if an internal server error occurs', async () => {
+  it('return a 500 error', async () => {
     try {
       req.body.email = 'chaudhry@dtu.dk';
 

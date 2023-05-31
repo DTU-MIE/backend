@@ -27,20 +27,37 @@ function authenticateToken(req, res, next) {
     }
   }
   
+//authorized user only access certain endpoint, but for now there is no privilages assigneed to this
+async function authorize(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
+  try {
+      if (!token) {
+          console.log('No token provided');
+          return res.status(401).send({ message: 'No token provided' });
+      }
 
-//   // authorize user only access certain endpoint, but for now there is no privilages assigneed
-// async  function authorize(roles) {
-//     return (req, res, next) => {
-//       const userRole = req.session.user.role;
-//       if (!roles.includes(userRole)) {
-//         return res.status(403).json({ message: 'You are not authorized to access this resource' });
-//       }
-//       next();
-//     };
-//   }
+      const decodedToken = verifyToken(token);
+
+      console.log('Decoded Token:', decodedToken);
+
+      if (decodedToken.profession !== 'Sundhedsprofessionel') {
+          console.log('Invalid profession:', decodedToken.profession);
+          return res.status(403).send({ message: 'Access denied. Only Sundhedsprofessionel are allowed.' });
+      }
+
+      req.user = decodedToken;
+      next();
+  } catch (error) {
+      console.log('Invalid token:', error);
+      res.status(401).send({ message: 'Invalid token' });
+  }
+}
+
 
 module.exports = {
     generateToken,
-    authenticateToken
+    authenticateToken,
+    authorize
 };

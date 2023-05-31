@@ -1,10 +1,7 @@
 const bcrypt = require('bcrypt');
 const sql = require("mssql");
 const jwt = require('jsonwebtoken');
-const {
-    SECRET_KEY
-  } = require("../config/config");
-const { dbConfig } = require("../config/config");
+const {SECRET_KEY} = require("../config/config");
 const { createUser, getUserByEmailAndPassword, Blacklist } = require('../models/userModel');
 const { generateToken } = require('../middleware/auth');
 
@@ -24,11 +21,6 @@ async function registerUser(req, res) {
   
       const token = jwt.sign({ email, role: profession === 'Sundhedsprofessionel' ? 'Admin' : profession === 'studerende' ? 'User' : 'Unknown' }, SECRET_KEY);
       console.log('Received registration request:', req.body);
-
-      // ... rest of the code ...
-  
-      console.log('User created:', userId);
-      console.log('Token generated:', token);
   
       res.status(201).json({
         userId,
@@ -72,11 +64,10 @@ async function loginUser(req, res) {
 
         res.status(200).send({ token });
     } catch (error) {
-        console.error(error);
         res.status(500).send({ message:'Error occurred while logging in' });
     }
 }
-/*  
+
 async function logoutUser(req, res) {
     try {
       const token = req.headers.authorization.split(' ')[1];
@@ -85,15 +76,15 @@ async function logoutUser(req, res) {
   
       res.send({ message: 'user is logged out' });
     } catch (error) {
-      console.error(error);
       res.sendStatus(500);
     }
 }
- */ 
+
+
 
 
 module.exports = {
   registerUser,
   loginUser,
-  //logoutUser
+  logoutUser
 };

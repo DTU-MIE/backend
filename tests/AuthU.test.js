@@ -9,7 +9,7 @@ jest.mock('jsonwebtoken', () => ({
 }));
 
 describe('authenticateToken', () => {
-    test('should call the next middleware function when a valid token is provided', () => {
+    test('when a valid token is provided call the next middleware function ', () => {
         const req = {
           headers: {
             authorization: 'Bearer valid-token',
@@ -29,7 +29,7 @@ describe('authenticateToken', () => {
         expect(next).toHaveBeenCalled();
       });
       
-  test('should return 401 if no token is provided', () => {
+  test('return 401 if no token is provided', () => {
     const req = {
       headers: {},
     };
@@ -45,7 +45,7 @@ describe('authenticateToken', () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  test('should return 403 for an invalid token', () => {
+  test('return 403 for an invalid token', () => {
     const req = {
       headers: {
         authorization: 'Bearer invalid-token',
@@ -62,7 +62,6 @@ describe('authenticateToken', () => {
     });
 
     auth.authenticateToken(req, res, next);
-
     expect(res.status).toHaveBeenCalledWith(403);
     expect(res.json).toHaveBeenCalledWith({ message: 'Invalid token' });
     expect(next).not.toHaveBeenCalled();

@@ -4,13 +4,13 @@ const { updateNeed } = require('../models/needModel');
 jest.mock('mssql');
 
 describe('updateNeed', () => {
-  it('should update the need in the database', async () => {
+  it('update the need in the database', async () => {
 
     const id = 1;
     const updatedNeed = {
       NeedIs: 'New Need',
       Title: 'Updated Title',
-      ContactPerson: 'John Doe',
+      ContactPerson: 'arooj',
       Keywords: 'keyword1, keyword2',
       Proposal: 'Updated Proposal',
       Solution: 'Updated Solution',
@@ -47,7 +47,7 @@ describe('updateNeed', () => {
     expect(mockInput).toHaveBeenCalledTimes(11);
     expect(mockInput).toHaveBeenCalledWith('NeedIs', sql.NVarChar(4000), 'New Need');
     expect(mockInput).toHaveBeenCalledWith('Title', sql.NVarChar(1000), 'Updated Title');
-    expect(mockInput).toHaveBeenCalledWith('ContactPerson', sql.NVarChar(1000), 'John Doe');
+    expect(mockInput).toHaveBeenCalledWith('ContactPerson', sql.NVarChar(1000), 'arooj');
     expect(mockInput).toHaveBeenCalledWith('Keywords', sql.NVarChar(1000), 'keyword1, keyword2');
     expect(mockInput).toHaveBeenCalledWith('Proposal', sql.NVarChar(1000), 'Updated Proposal');
     expect(mockInput).toHaveBeenCalledWith('Solution', sql.NVarChar(1000), 'Updated Solution');
@@ -65,13 +65,13 @@ describe('updateNeed', () => {
     expect(result).toEqual(expect.any(Array));
   });
 
-  it('should throw an error if update fails', async () => {
+  it('throw an error if update fails', async () => {
 
     const id = 1;
     const updatedNeed = {
       NeedIs: 'New Need',
       Title: 'Updated Title',
-      ContactPerson: 'John Doe',
+      ContactPerson: 'arooj',
       Keywords: 'keyword1, keyword2',
       Proposal: 'Updated Proposal',
       Solution: 'Updated Solution',
@@ -99,14 +99,14 @@ describe('Controller', () => {
     }));
       
     describe('updated', () => {
-      it('should update the need and return a success message', async () => {
+      it('update need and return a success message', async () => {
 
         const req = {
           params: { id: 1 },
           body: {
             NeedIs: 'New Need',
             Title: 'Updated Title',
-            ContactPerson: 'John Doe',
+            ContactPerson: 'arooj',
             Keywords: 'keyword1, keyword2',
             Proposal: 'Updated Proposal',
             Solution: 'Updated Solution',
@@ -130,7 +130,7 @@ describe('Controller', () => {
         expect(model.updateNeed).toHaveBeenCalledWith(expect.any(Number), {
           NeedIs: 'New Need',
           Title: 'Updated Title',
-          ContactPerson: 'John Doe',
+          ContactPerson: 'arooj',
           Keywords: 'keyword1, keyword2',
           Proposal: 'Updated Proposal',
           Solution: 'Updated Solution',
@@ -143,14 +143,14 @@ describe('Controller', () => {
         expect(res.status).not.toHaveBeenCalled();
       });
   
-      it('should handle error and return a 500 status code', async () => {
+      it('return a 500 status code', async () => {
   
         const req = {
           params: { id: 1 },
           body: {
             NeedIs: 'New Need',
             Title: 'Updated Title',
-            ContactPerson: 'John Doe',
+            ContactPerson: 'arooj',
             Keywords: 'keyword1, keyword2',
             Proposal: 'Updated Proposal',
             Solution: 'Updated Solution',
@@ -167,11 +167,10 @@ describe('Controller', () => {
 
         await controller.updated(req, res);
   
-        // Assertions
         expect(model.updateNeed).toHaveBeenCalledWith(expect.any(Number), {
           NeedIs: 'New Need',
           Title: 'Updated Title',
-          ContactPerson: 'John Doe',
+          ContactPerson: 'arooj',
           Keywords: 'keyword1, keyword2',
           Proposal: 'Updated Proposal',
           Solution: 'Updated Solution',

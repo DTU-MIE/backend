@@ -5,7 +5,6 @@ const model = require('../models/needModel');
 const sql = require('mssql');
 const router = require('../routes/needRoutes');
 
-// Mocking the SQL connection
 jest.mock('mssql', () => ({
   connect: jest.fn(),
   close: jest.fn(),
@@ -14,13 +13,11 @@ jest.mock('mssql', () => ({
   query: jest.fn(),
 }));
 
-// Mocking the authentication token
 jest.mock('jsonwebtoken', () => ({
   sign: jest.fn(),
   verify: jest.fn(),
 }));
 
-// Mocking the authentication middleware
 jest.mock('../middleware/auth', () => ({
   authenticateToken: jest.fn((req, res, next) => next()),
 }));
@@ -39,17 +36,13 @@ describe('Integration Test', () => {
     jest.clearAllMocks();
   });
 
-  it('should update the need successfully', async () => {
-    // Mocking the SQL query result
+  it('update the need successfully', async () => {
     sql.query.mockResolvedValueOnce({ recordset: {} });
 
-    // Mocking the token verification
     jwt.verify.mockReturnValueOnce({ userId: 123 });
 
-    // Mocking the authentication token
     jwt.sign.mockReturnValueOnce('mocked_token');
 
-    // Manually creating a mock function for the updateNeed method
     const updateNeedMock = jest.fn().mockResolvedValueOnce();
     model.updateNeed = updateNeedMock;
 
@@ -57,7 +50,7 @@ describe('Integration Test', () => {
     const updatedData = {
       NeedIs: 'Updated Need',
       Title: 'Updated Title',
-      ContactPerson: 'John Doe',
+      ContactPerson: 'arooj',
       Keywords: 'keyword1, keyword2',
       Proposal: 'Updated Proposal',
       Solution: 'Updated Solution',
@@ -87,17 +80,13 @@ describe('Integration Test', () => {
     expect(receivedData.extension).toBe(updatedData.extension);
   });
 
-  it('should return an error when failing to update the need', async () => {
-    // Mocking the SQL query error
+  it('return an error when failed to update the need', async () => {
     sql.query.mockRejectedValueOnce(new Error('Update failed'));
   
-    // Mocking the token verification
     jwt.verify.mockReturnValueOnce({ userId: 123 });
   
-    // Mocking the authentication token
     jwt.sign.mockReturnValueOnce('mocked_token');
   
-    // Manually creating a mock function for the updateNeed method
     const updateNeedMock = jest.fn().mockRejectedValueOnce(new Error('Failed to update'));
     model.updateNeed = updateNeedMock;
   
@@ -105,7 +94,7 @@ describe('Integration Test', () => {
     const updatedData = {
       NeedIs: 'Updated Need',
       Title: 'Updated Title',
-      ContactPerson: 'John Doe',
+      ContactPerson: 'arooj',
       Keywords: 'keyword1, keyword2',
       Proposal: 'Updated Proposal',
       Solution: 'Updated Solution',

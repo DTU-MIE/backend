@@ -7,24 +7,29 @@ schemes:
   - "http"
   - "https"
 paths:
-    /api/v1/download/{id}:
-      get:
-        summary: Download the file of a need
-        parameters:
-          - in: path
-            name: id
-            description: ID of the need to have the url of the file
-            required: true
-            type: "integer"
-        responses:
-          200:
-            description: OK
-            schema:
-              type: file
-          404:
-            description: File/Need not found
-            schema:
-              type: object
-              properties:
-                message:
-                  type: "string"
+  /api/v1/download/{id}:
+    get:
+      summary: Download the file of a need
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          type: "string"
+          description: "Authorization token (Bearer token)"
+        - in: path
+          name: id
+          description: ID of the need to have the url of the file
+          required: true
+          type: "integer"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: file
+        404:
+          description: File/Need not found
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"

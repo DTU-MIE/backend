@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68% </span>
+                <span class="strong">40.74% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/25</span>
+                <span class='fraction'>11/27</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">68% </span>
+                <span class="strong">40.74% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/25</span>
+                <span class='fraction'>11/27</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -119,7 +119,10 @@
 <a name='L54'></a><a href='#L54'>54</a>
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -128,22 +131,25 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -179,25 +185,28 @@
 &nbsp;
 const { dbConfig } = require("../config/config");
 &nbsp;
-const insertComment = async (id, comment, kind) =&gt; {
+const insertComment = async (needID, comment, kind) =&gt; {
     try {
       if (!comment) {
         throw new Error('Comment is empty!');
       }
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (kind !== 'Proposal' &amp;&amp; kind !== 'Comment') {
+        throw new Error('Invalid kind value!');
+      }
   
-      const pool = new sql.ConnectionPool(dbConfig);
-      await pool.connect();
-      const request = pool.request();
-      request.input('id', sql.Int, id);
-      request.input('comment', sql.NVarChar(4000), comment);
-      request.input('kind', sql.NVarChar(255), kind);
+      const pool = <span class="cstat-no" title="statement not covered" >new sql.ConnectionPool(dbConfig);</span>
+<span class="cstat-no" title="statement not covered" >      await pool.connect();</span>
+      const request = <span class="cstat-no" title="statement not covered" >pool.request();</span>
+<span class="cstat-no" title="statement not covered" >      request.input('needID', sql.Int, needID);</span>
+<span class="cstat-no" title="statement not covered" >      request.input('comment', sql.NVarChar(4000), comment);</span>
+<span class="cstat-no" title="statement not covered" >      request.input('kind', sql.NVarChar(255), kind);</span>
   
-      await request.query(`
-        INSERT INTO comments (id, comment, kind, created_at)
-        VALUES (@id, @comment, @kind, GETDATE())
+<span class="cstat-no" title="statement not covered" >      await request.query(`</span>
+        INSERT INTO comments (needID, comment, kind, created_at)
+        VALUES (@needID, @comment, @kind, GETDATE())
       `);
   
-      console.log('Comment added successfully!');
+<span class="cstat-no" title="statement not covered" >      console.log('Comment added successfully!');</span>
     } catch (err) {
       throw err;
     }
@@ -205,17 +214,17 @@ const insertComment = async (id, comment, kind) =&gt; {
   
   
 &nbsp;
-  const getCommentsForNeed = <span class="fstat-no" title="function not covered" >as</span>ync (id) =&gt; {
+  const getCommentsForNeed = <span class="fstat-no" title="function not covered" >as</span>ync (needID) =&gt; {
 <span class="cstat-no" title="statement not covered" >    try {</span>
       const pool = <span class="cstat-no" title="statement not covered" >new sql.ConnectionPool(dbConfig);</span>
 <span class="cstat-no" title="statement not covered" >      await pool.connect();</span>
       const request = <span class="cstat-no" title="statement not covered" >pool.request();</span>
-<span class="cstat-no" title="statement not covered" >      request.input('id', sql.Int, id);</span>
+<span class="cstat-no" title="statement not covered" >      request.input('needID', sql.Int, needID);</span>
   
       const result = <span class="cstat-no" title="statement not covered" >await request.query(`</span>
         SELECT *
         FROM comments
-        WHERE id = @id
+        WHERE needID = @needID
       `);
   
 <span class="cstat-no" title="statement not covered" >      return result.recordset;</span>
@@ -238,7 +247,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-05-29T14:14:22.820Z
+                at 2023-05-30T15:59:09.301Z
             </div>
         <script src="../prettify.js"></script>
         <script>

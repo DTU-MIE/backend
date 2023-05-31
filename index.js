@@ -8,6 +8,8 @@ const userRoutes = require('./routes/userRoutes');
 const needRoutes = require('./routes/needRoutes');
 const airtableI = require('./routes/airtableRoutes');
 const searchRoutes = require('./routes/searchRoutes');
+const deleteRoutes = require('./routes/deleteRoutes');
+const authorizedRoutes = require('./routes/authorizedRoutes');
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -92,6 +94,8 @@ app.use('/api/v1/', airtableI);
 app.use('/api/v1/', userRoutes);
 app.use('/api/v1/', searchRoutes);
 app.use('/api/v1/', commentRoutes);
+app.use('/api/v1/', deleteRoutes);
+app.use('/api/v1/', authorizedRoutes);
 app.use('/api/v1/api-docs',swaggerUi.serve, swaggerUi.setup(apiSpec));
 const port = process.env.PORT || 3002;
 app.listen(port, () => console.log(`listening on port ${port}`));

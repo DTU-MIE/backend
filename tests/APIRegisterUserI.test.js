@@ -12,7 +12,6 @@ jest.mock('../models/userModel', () => {
   return {
     ...originalUserController,
     createUser: jest.fn(async (userDetails) => {
-      //Mock the createUser function 
       const { email } = userDetails;
       if (email === 'newuser@dtu.dk') {
         throw new Error('Email already registered');
@@ -39,7 +38,7 @@ describe('POST /register', () => {
     jest.clearAllMocks();
   });
 
-  it('should return an error if the email is already registered', async () => {
+  it('if the email is already registered return an error', async () => {
     const reqBody = {
       id: 123,
       name: 'new User',
@@ -61,7 +60,7 @@ describe('POST /register', () => {
     expect(jwt.sign).not.toHaveBeenCalled();
   });
 
-  it('should register a user and return a token with status 201', async () => {
+  it('register a user and return a token with status 201', async () => {
     const reqBody = {
       id: 123,
       name: 'new User',

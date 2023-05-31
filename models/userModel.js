@@ -13,7 +13,6 @@ const saltRounds = 10;
 const { dbConfig } = require("../config/config");
 
 async function createUser(userDetails) {
-  console.log("🥺");
 
     const pool = new sql.ConnectionPool(dbConfig);
     await pool.connect();
@@ -70,7 +69,8 @@ async function createUser(userDetails) {
 
 async function getUserByEmailAndPassword(email, password) {
     console.log('email:', email, 'password:', password);
-    const pool = await sql.connect(dbConfig);
+    const pool = new sql.ConnectionPool(dbConfig);
+    await pool.connect();
     try {
       const result = await pool.request()
         .input('email', sql.NVarChar(50), email)
@@ -95,7 +95,7 @@ async function getUserByEmailAndPassword(email, password) {
     }
 }
   
-/*  
+
 async function Blacklist(token) {
     const connection = await sql.connect(dbConfig);
     const request = connection.request();
@@ -103,10 +103,10 @@ async function Blacklist(token) {
     await request.query('INSERT INTO blacklist (token) VALUES (@token)');
     await connection.close();
 }
- */ 
+
 module.exports = {
   createUser,
   getUserByEmailAndPassword,
-  //Blacklist
+  Blacklist
 };
 

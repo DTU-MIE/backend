@@ -1,12 +1,11 @@
 const sql = require('mssql');
 jest.mock('mssql');
 
-
 const model = require('../models/needModel');
 const needController = require('../controllers/needController');
 
 describe('insertNeed', () => {
-    test('should insert a new need and return the ID', async () => {
+    test('insert a new need and return its ID', async () => {
       const need = {
         NeedIs: 'Test Need',
         Title: 'Test Title',
@@ -61,7 +60,7 @@ describe('insertNeed', () => {
 
  
   describe('createNeed', () => {
-    test('should create a new need and return the ID when file is present', async () => {
+    test('create a new need & return the ID if file is present', async () => {
       model.insertNeed = jest.fn().mockResolvedValueOnce(1);
       const mockRequest = {
         body: {
@@ -103,7 +102,7 @@ describe('insertNeed', () => {
       expect(mockResponse.json).toHaveBeenCalledWith({ id: 1 });
     });
   
-    test('should create a new need and return the ID when file is not present', async () => {
+    test('create a new need and return the ID when file is not present', async () => {
       model.insertNeed = jest.fn().mockResolvedValueOnce(2);
       const mockRequest = {
         body: {
@@ -136,7 +135,6 @@ describe('insertNeed', () => {
       const mockInsertNeed = jest.spyOn(model, 'insertNeed').mockResolvedValueOnce(2);
   
       await needController.createNeed(mockRequest, mockResponse);
-  
       expect(mockInsertNeed).toHaveBeenCalledWith(expect.objectContaining(need));
       expect(mockResponse.json).toHaveBeenCalledWith({ id: 2 });
     });

@@ -41,7 +41,7 @@ describe('getNeedById', () => {
       expect(mockPool.close).toHaveBeenCalledTimes(1);
     });
   
-    test('should return the need with the given ID', async () => {
+    test('return need with the given ID', async () => {
       const id = 1;
   
       const result = await model.getNeedById(id);
@@ -70,125 +70,41 @@ describe('getNeedById', () => {
     `);
     });  
   });
-  
-  
-  describe('getNeed', () => {
-    test('should return the need with the file URL', async () => {
-        const mockReq = {
-          params: { id: 1 },
-          headers: { host: 'localhost:3002' },
-          protocol: 'http',
-        };
-    
-        const mockRes = {
-          json: jest.fn(),
-          status: jest.fn().mockReturnThis(),
-        };
-    
-        model.getNeedById = jest.fn().mockResolvedValueOnce({
-          id: 1,
-          NeedIs: 'Test Need',
-          Title: 'Test Title',
-          ContactPerson: 'Test Person',
-          Keywords: 'Test Keywords',
-          Proposal: 'Test Proposal',
-          Solution: 'Test Solution',
-          CreatedAt: new Date(),
-          HasFile: 'file',
-        });
-    
-        await controller.getNeed(mockReq, mockRes);
-    
-        expect(model.getNeedById).toHaveBeenCalledTimes(1);
-        expect(model.getNeedById).toHaveBeenCalledWith(1);
-    
-        expect(mockRes.status).toHaveBeenCalledTimes(0);
-        expect(mockRes.json).toHaveBeenCalledTimes(1);
-        expect(mockRes.json).toHaveBeenCalledWith({
-          body: {
-            id: 1,
-            NeedIs: 'Test Need',
-            Title: 'Test Title',
-            ContactPerson: 'Test Person',
-            Keywords: 'Test Keywords',
-            Proposal: 'Test Proposal',
-            Solution: 'Test Solution',
-            CreatedAt: expect.any(Date),
-            fileURL: 'http://localhost:3002/api/v1/download/1',
-          },
-        });
-      });
-      test('should return a 404 status if the need is not found', async () => {
-        const mockReq = {
-          params: { id: 1 },
-          headers: { host: 'localhost:3002' },
-          protocol: 'http',
-        };
-      
-        const mockRes = {
-          json: jest.fn(),
-          status: jest.fn().mockReturnThis(),
-        };
-      
-        model.getNeedById = jest.fn().mockResolvedValueOnce(null);
-      
-        const mockError = jest.spyOn(console, 'error');
-        mockError.mockImplementation(() => {}); // Mock console.error to do nothing
-      
-        await controller.getNeed(mockReq, mockRes);
-      
-        expect(model.getNeedById).toHaveBeenCalledTimes(1);
-        expect(model.getNeedById).toHaveBeenCalledWith(1);
-      
-        expect(mockRes.status).toHaveBeenCalledTimes(1);
-        expect(mockRes.status).toHaveBeenCalledWith(404);
-        expect(mockRes.json).toHaveBeenCalledTimes(1);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Need is not found' });
-      
-        mockError.mockRestore(); // Restore console.error to its original implementation
-      });
-    
-      test('should return a 500 status and error message on internal server error', async () => {
-        const mockReq = {
-          params: { id: 1 },
-          headers: { host: 'localhost:3002' },
-          protocol: 'http',
-        };
-    
-        const mockRes = {
-          json: jest.fn(),
-          status: jest.fn().mockReturnThis(),
-        };
-    
-        model.getNeedById = jest.fn().mockRejectedValueOnce(new Error('Database connection error'));
 
-        const mockError = jest.spyOn(console, 'error');
-        mockError.mockImplementation(() => {}); // Mock console.error to do nothing
-      
-        await controller.getNeed(mockReq, mockRes);
-    
-        expect(model.getNeedById).toHaveBeenCalledTimes(1);
-        expect(model.getNeedById).toHaveBeenCalledWith(1);
-    
-        expect(mockRes.status).toHaveBeenCalledTimes(1);
-        expect(mockRes.status).toHaveBeenCalledWith(500);
-        expect(mockRes.json).toHaveBeenCalledTimes(1);
-        expect(mockRes.json).toHaveBeenCalledWith({ message: 'Internal Server Error' });
-        mockError.mockRestore();
+describe('getNeed', () => {
+  test('return need with the file URL', async () => {
+      const mockReq = {
+        params: { id: 1 },
+        headers: { host: 'localhost:3002' },
+        protocol: 'http',
+      };
+  
+      const mockRes = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      model.getNeedById = jest.fn().mockResolvedValueOnce({
+        id: 1,
+        NeedIs: 'Test Need',
+        Title: 'Test Title',
+        ContactPerson: 'Test Person',
+        Keywords: 'Test Keywords',
+        Proposal: 'Test Proposal',
+        Solution: 'Test Solution',
+        CreatedAt: new Date(),
+        HasFile: 'file',
       });
-      test('should return the need with "no file" URL if HasFile is not "file"', async () => {
-        const mockReq = {
-          params: { id: 1 },
-          headers: { host: 'localhost:3002' },
-          protocol: 'http',
-        };
-    
-        const mockRes = {
-          json: jest.fn(),
-          status: jest.fn().mockReturnThis(),
-        };
-    
-        model.getNeedById = jest.fn().mockResolvedValueOnce({
+  
+      await controller.getNeed(mockReq, mockRes);
+  
+      expect(model.getNeedById).toHaveBeenCalledTimes(1);
+      expect(model.getNeedById).toHaveBeenCalledWith(1);
+  
+      expect(mockRes.status).toHaveBeenCalledTimes(0);
+      expect(mockRes.json).toHaveBeenCalledTimes(1);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        body: {
           id: 1,
           NeedIs: 'Test Need',
           Title: 'Test Title',
@@ -196,45 +112,102 @@ describe('getNeedById', () => {
           Keywords: 'Test Keywords',
           Proposal: 'Test Proposal',
           Solution: 'Test Solution',
-          CreatedAt: new Date(),
-          HasFile: 'no file',
-        });
-    
-        await controller.getNeed(mockReq, mockRes);
-    
-        expect(model.getNeedById).toHaveBeenCalledTimes(1);
-        expect(model.getNeedById).toHaveBeenCalledWith(1);
-    
-        expect(mockRes.status).toHaveBeenCalledTimes(0);
-        expect(mockRes.json).toHaveBeenCalledTimes(1);
-        expect(mockRes.json).toHaveBeenCalledWith({
-          body: {
-            id: 1,
-            NeedIs: 'Test Need',
-            Title: 'Test Title',
-            ContactPerson: 'Test Person',
-            Keywords: 'Test Keywords',
-            Proposal: 'Test Proposal',
-            Solution: 'Test Solution',
-            CreatedAt: expect.any(Date),
-            fileURL: 'no file',
-          },
-        });
+          CreatedAt: expect.any(Date),
+          fileURL: 'http://localhost:3002/api/v1/download/1',
+        },
       });
+    });
+    test('if the need is not found return a 404 status', async () => {
+      const mockReq = {
+        params: { id: 1 },
+        headers: { host: 'localhost:3002' },
+        protocol: 'http',
+      };
+    
+      const mockRes = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+    
+      model.getNeedById = jest.fn().mockResolvedValueOnce(null);
+    
+      const mockError = jest.spyOn(console, 'error');
+      mockError.mockImplementation(() => {}); 
+    
+      await controller.getNeed(mockReq, mockRes);
+    
+      expect(model.getNeedById).toHaveBeenCalledTimes(1);
+      expect(model.getNeedById).toHaveBeenCalledWith(1);
+    
+      expect(mockRes.status).toHaveBeenCalledTimes(1);
+      expect(mockRes.status).toHaveBeenCalledWith(404);
+      expect(mockRes.json).toHaveBeenCalledTimes(1);
+      expect(mockRes.json).toHaveBeenCalledWith({ message: 'Need is not found' });
+    
+      mockError.mockRestore(); 
+    });
+  
+    test('return a 500 status', async () => {
+      const mockReq = {
+        params: { id: 1 },
+        headers: { host: 'localhost:3002' },
+        protocol: 'http',
+      };
+  
+      const mockRes = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      model.getNeedById = jest.fn().mockRejectedValueOnce(new Error('Database connection error'));
 
-      test('should return the need with the file URL for a non-local host', async () => {
-        const mockReq = {
-          params: { id: 1 },
-          headers: { host: 'www.innocloud.dk' },
-          protocol: 'https',
-        };
-      
-        const mockRes = {
-          json: jest.fn(),
-          status: jest.fn().mockReturnThis(),
-        };
-      
-        model.getNeedById = jest.fn().mockResolvedValueOnce({
+      const mockError = jest.spyOn(console, 'error');
+      mockError.mockImplementation(() => {}); 
+    
+      await controller.getNeed(mockReq, mockRes);
+  
+      expect(model.getNeedById).toHaveBeenCalledTimes(1);
+      expect(model.getNeedById).toHaveBeenCalledWith(1);
+  
+      expect(mockRes.status).toHaveBeenCalledTimes(1);
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledTimes(1);
+      expect(mockRes.json).toHaveBeenCalledWith({ message: 'Internal Server Error' });
+      mockError.mockRestore();
+    });
+    test('need with "no file" URL if HasFile is not "file"', async () => {
+      const mockReq = {
+        params: { id: 1 },
+        headers: { host: 'localhost:3002' },
+        protocol: 'http',
+      };
+  
+      const mockRes = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+  
+      model.getNeedById = jest.fn().mockResolvedValueOnce({
+        id: 1,
+        NeedIs: 'Test Need',
+        Title: 'Test Title',
+        ContactPerson: 'Test Person',
+        Keywords: 'Test Keywords',
+        Proposal: 'Test Proposal',
+        Solution: 'Test Solution',
+        CreatedAt: new Date(),
+        HasFile: 'no file',
+      });
+  
+      await controller.getNeed(mockReq, mockRes);
+  
+      expect(model.getNeedById).toHaveBeenCalledTimes(1);
+      expect(model.getNeedById).toHaveBeenCalledWith(1);
+  
+      expect(mockRes.status).toHaveBeenCalledTimes(0);
+      expect(mockRes.json).toHaveBeenCalledTimes(1);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        body: {
           id: 1,
           NeedIs: 'Test Need',
           Title: 'Test Title',
@@ -242,35 +215,61 @@ describe('getNeedById', () => {
           Keywords: 'Test Keywords',
           Proposal: 'Test Proposal',
           Solution: 'Test Solution',
-          CreatedAt: new Date(),
-          HasFile: 'file',
-        });
-      
-        const mockError = jest.spyOn(console, 'error');
-        mockError.mockImplementation(() => {}); // Mock console.error to do nothing
-      
-        await controller.getNeed(mockReq, mockRes);
-      
-        expect(model.getNeedById).toHaveBeenCalledTimes(1);
-        expect(model.getNeedById).toHaveBeenCalledWith(1);
-      
-        expect(mockRes.status).toHaveBeenCalledTimes(0);
-        expect(mockRes.json).toHaveBeenCalledTimes(1);
-        expect(mockRes.json).toHaveBeenCalledWith({
-          body: {
-            id: 1,
-            NeedIs: 'Test Need',
-            Title: 'Test Title',
-            ContactPerson: 'Test Person',
-            Keywords: 'Test Keywords',
-            Proposal: 'Test Proposal',
-            Solution: 'Test Solution',
-            CreatedAt: expect.any(Date),
-            fileURL: 'https://www.innocloud.dk/api/v1/download/1',
-          },
-        });      
-        mockError.mockRestore(); 
+          CreatedAt: expect.any(Date),
+          fileURL: 'no file',
+        },
       });
-  });
+    });
+
+    test('return need with file URL for a nonlocal host', async () => {
+      const mockReq = {
+        params: { id: 1 },
+        headers: { host: 'www.innocloud.dk' },
+        protocol: 'https',
+      };
+    
+      const mockRes = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+      };
+    
+      model.getNeedById = jest.fn().mockResolvedValueOnce({
+        id: 1,
+        NeedIs: 'Test Need',
+        Title: 'Test Title',
+        ContactPerson: 'Test Person',
+        Keywords: 'Test Keywords',
+        Proposal: 'Test Proposal',
+        Solution: 'Test Solution',
+        CreatedAt: new Date(),
+        HasFile: 'file',
+      });
+    
+      const mockError = jest.spyOn(console, 'error');
+      mockError.mockImplementation(() => {}); 
+    
+      await controller.getNeed(mockReq, mockRes);
+    
+      expect(model.getNeedById).toHaveBeenCalledTimes(1);
+      expect(model.getNeedById).toHaveBeenCalledWith(1);
+    
+      expect(mockRes.status).toHaveBeenCalledTimes(0);
+      expect(mockRes.json).toHaveBeenCalledTimes(1);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        body: {
+          id: 1,
+          NeedIs: 'Test Need',
+          Title: 'Test Title',
+          ContactPerson: 'Test Person',
+          Keywords: 'Test Keywords',
+          Proposal: 'Test Proposal',
+          Solution: 'Test Solution',
+          CreatedAt: expect.any(Date),
+          fileURL: 'https://www.innocloud.dk/api/v1/download/1',
+        },
+      });      
+      mockError.mockRestore(); 
+    });
+});
   
   

@@ -7,17 +7,13 @@ const auth = require('../middleware/auth');
 jest.mock('../models/needModel');
 jest.mock('../middleware/auth');
 
-// Mock SQL data
 const mockNeeds = [
-  { id: 1, NeedIs: 'Some Need', Title: 'Test Need', ContactPerson: 'John Doe', CreatedAt: '2023-01-01', Keywords: 'test, need', Proposal: 'Some proposal', Solution: 'Some solution', HasFile: 'file' },
-  { id: 2, NeedIs: 'Another Need', Title: 'Another Test Need', ContactPerson: 'Jane Smith', CreatedAt: '2023-01-02', Keywords: 'another, test, need', Proposal: 'Another proposal', Solution: 'Another solution', HasFile: 'no file' },
+  { id: 1, NeedIs: 'Some Need', Title: 'Test Need', ContactPerson: 'arooj', CreatedAt: '2023-01-01', Keywords: 'test, need', Proposal: 'Some proposal', Solution: 'Some solution', HasFile: 'file' },
+  { id: 2, NeedIs: 'Another Need', Title: 'Another Test Need', ContactPerson: 'arooj', CreatedAt: '2023-01-02', Keywords: 'another, test, need', Proposal: 'Another proposal', Solution: 'Another solution', HasFile: 'no file' },
 ];
-
 jest.mock('../config/config', () => ({
   AUTH_KEY: 'test-auth-key', 
 }));
-
-// Mock the authentication module
 jest.mock('../middleware/auth', () => ({
   authenticateToken: jest.fn((req, res, next) => {
     req.user = { userId: 123 }; 
@@ -38,7 +34,7 @@ describe('All Needs API Integration Test', () => {
     jest.clearAllMocks();
   });
 
-  test('should return all needs with file URLs if file exists', async () => {
+  test('return all needs with file URLs if file exists', async () => {
     const mockToken = 'mock-valid-token';
 
     model.getAllNeeds.mockResolvedValueOnce(mockNeeds);
@@ -57,7 +53,7 @@ describe('All Needs API Integration Test', () => {
           id: 1,
           NeedIs: 'Some Need',
           Title: 'Test Need',
-          ContactPerson: 'John Doe',
+          ContactPerson: 'arooj',
           CreatedAt: '2023-01-01',
           Keywords: 'test, need',
           Proposal: 'Some proposal',
@@ -68,7 +64,7 @@ describe('All Needs API Integration Test', () => {
           id: 2,
           NeedIs: 'Another Need',
           Title: 'Another Test Need',
-          ContactPerson: 'Jane Smith',
+          ContactPerson: 'arooj',
           CreatedAt: '2023-01-02',
           Keywords: 'another, test, need',
           Proposal: 'Another proposal',
@@ -79,7 +75,7 @@ describe('All Needs API Integration Test', () => {
     });
   });
 
-  test('should return a 500 status if an error occurs', async () => {
+  test('return a 500 status', async () => {
     const mockToken = 'mock-valid-token';
 
     const errorMessage = 'Internal Server Error';

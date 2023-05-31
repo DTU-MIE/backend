@@ -11,6 +11,11 @@ paths:
     get:
       summary: "Get a need by ID"
       parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          type: "string"
+          description: "Authorization token (Bearer token)"
         - in: path
           name: id
           description: ID of the need to get

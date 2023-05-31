@@ -3,7 +3,6 @@ const sql = require("mssql");
 const { dbConfig } = require("../config/config");
 
 
-
 async function insertNeed(need) {
 
   const pool = new sql.ConnectionPool(dbConfig);
@@ -79,11 +78,27 @@ const updateNeed = async (id, updatedNeed) => {
     return result.recordset;
 };
 
+async function deleteNeed(id) {
+  try {
+    const pool = await sql.connect(dbConfig);
+    const request = pool.request();
+    const query = 'DELETE FROM NEED WHERE id = @id';
+    request.input('id', sql.Int, id);
+    const result = await request.query(query);
+    return result.rowsAffected[0] > 0;
+  } catch (error) {
+    console.error('Error deleting need:', error);
+    return false;
+  } finally {
+    sql.close();
+  }
+}
 
 
 module.exports = {
   insertNeed,
   getNeedById,
   getAllNeeds,
-  updateNeed
+  updateNeed,
+  deleteNeed
 };

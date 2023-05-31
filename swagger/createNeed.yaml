@@ -7,38 +7,6 @@ schemes:
   - "http"
   - "https"
 paths:
-  /api/v1/login:
-    post:
-      summary: "User login"
-      consumes:
-        - "application/json"
-      parameters:
-        - name: "body"
-          in: "body"
-          required: true
-          schema:
-            type: "object"
-            properties:
-              email:
-                type: "string"
-                description: "The email of the user."
-              password:
-                type: "string"
-                description: "The password of the user."
-      responses:
-        200:
-          description: "Success"
-          schema:
-            type: "object"
-            properties:
-              token:
-                type: "string"
-                description: "The authentication token for the user."
-        401:
-          description: "Unauthorized"
-        500:
-          description: "Internal Server Error"
-
   /api/v1/needs:
     post:
       summary: "Create a new need"

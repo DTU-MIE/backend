@@ -1,8 +1,6 @@
 const mime = require('mime');
 const model =  require('../models/needModel');
 
-
-//const {updateNeed} =  require('../models/needModel');
 async function createNeed(req, res) {
   const {NeedIs, Title, ContactPerson, Keywords, Proposal, Solution} = req.body;
   const FileData = req.file ? Buffer.from(req.file.buffer) : null;
@@ -118,11 +116,27 @@ const updated = async (req, res) => {
   }
 };
 
+async function deleted(req, res) {
+  const { id } = req.params;
+
+  try {
+    const isDeleted = await model.deleteNeed(id);
+    if (isDeleted) {
+      res.status(200).json({ success: true, message: 'Need deleted successfully' });
+    } else {
+      res.status(404).json({ success: false, message: 'Need not found' });
+    }
+  } catch (error) {
+    console.error('Error deleting need:', error);
+    res.status(500).json({ success: false, message: 'Failed to delete need' });
+  }
+}
 
 module.exports = {
   createNeed,
   getNeed,
   downloadFile,
   allNeeds,
-  updated
+  updated,
+  deleted
 };

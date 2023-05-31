@@ -1,7 +1,6 @@
-//This holds all the environment variables
 const dotenv = require('dotenv');
 
-// configraration with env. 
+//configraration with env. 
 dotenv.config({ path: '../.env' });
 
 const MSSQL_HOST = process.env.MSSQL_HOST || "localhost";
@@ -15,10 +14,6 @@ console.log(DATA_TABLE_NAME)
 const port = 1433;
 const SESSION_SECRET= process.env.SESSION_SECRET;
 console.log(SESSION_SECRET)
-//const MSSQL_PORT = process.env.MSSQL_PORT;
-// const REDIS_URL= process.env.REDIS_URL || "redis";
-// const REDIS_PORT= process.env.REDIS_PORT || 6379;
-// const SESSION_SECRET= process.env.SESSION_SECRET;
 const API_KEY= process.env.API_KEY || 'keyxH90r5GgPBip9q';
 const BASE_KEY= process.env.BASE_KEY || 'appS0HcQMolux76kh';
 const dbConfig = {  
@@ -38,22 +33,6 @@ const dbConfig = {
 
 }; 
 
-
-/*const dbConfig = {  
-    server: "sql",
-    database: "mie",
-    host: MSSQL_HOST,
-    user: MSSQL_USER, 
-    password: MSSQL_SA_PASSWORD, 
-    enableArithAbort: true,
-    Encrypt:true,
-    enableArithAbort: true,
-    Encrypt:true,
-    trustServerCertificate: true,
-    port: 1433
-
-}; 
-*/
 const config = {  
     server: "sql",
     database: "mie",
@@ -70,18 +49,17 @@ const config = {
 
 }; 
 console.log(config)
+
 module.exports = {
     SECRET_KEY,
     MSSQL_USER,
     MSSQL_SA_PASSWORD,
     AUTH_KEY,
     dbConfig,
-  //  dbConfig1,
   DATA_TABLE_NAME,
     config,
     API_KEY,
     BASE_KEY
-
   };
 
   

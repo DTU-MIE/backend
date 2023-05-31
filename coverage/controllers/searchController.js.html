@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.9% </span>
+                <span class="strong">95.65% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/22</span>
+                <span class='fraction'>22/23</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.9% </span>
+                <span class="strong">95.65% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/22</span>
+                <span class='fraction'>22/23</span>
             </div>
         
             
@@ -130,15 +130,13 @@
 <a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -147,6 +145,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -178,13 +178,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -194,25 +194,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const sql = require("mssql");
 const { config } = require("../config/config");
 &nbsp;
-const search = async (req, res) =&gt; {
+async function search(req, res) {
   const keyword = req.query.keyword;
   const pageNumber = req.query.pageNumber || <span class="branch-1 cbranch-no" title="branch not covered" >1;</span>
   const resultsPerPage = req.query.resultsPerPage || <span class="branch-1 cbranch-no" title="branch not covered" >10;</span>
 &nbsp;
-  let searchQuery; // Declare the searchQuery variable
-&nbsp;
   try {
     const pool = await sql.connect(config);
 &nbsp;
-    const tableExists = await pool
+    const tableExistsResult = await pool
       .request()
       .query(`
         SELECT 1
         FROM sys.tables
-        WHERE name = '${config.options.tableName}'
-      `);
+        WHERE name = @tableName
+      `, [config.options.tableName]);
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (tableExists.recordset.length === 0) {
+    const tableExists = tableExistsResult.recordset;
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (tableExists.length === 0) {
 <span class="cstat-no" title="statement not covered" >      throw new Error(`Table "${config.options.tableName}" does not exist in the database`);</span>
     }
 &nbsp;
@@ -221,16 +221,16 @@ const search = async (req, res) =&gt; {
       .query(`
         SELECT COLUMN_NAME
         FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = '${config.options.tableName}'
+        WHERE TABLE_NAME = @tableName
           AND COLUMN_NAME IN ('ContactPerson', 'Title', 'NeedIs', 'CreatedAt')
-      `);
+      `, [config.options.tableName]); 
 &nbsp;
     const columns = columnsResult.recordset.map((columnRow) =&gt; {
       const columnName = columnRow.COLUMN_NAME;
       return `${config.options.tableName}.${columnName} LIKE @keyword`;
     });
 &nbsp;
-    searchQuery = `
+    const searchQuery = `
       SELECT ${config.options.tableName}.ContactPerson, ${config.options.tableName}.Title, ${config.options.tableName}.NeedIs, ${config.options.tableName}.CreatedAt,
         CASE WHEN ${config.options.tableName}.FileData IS NULL THEN 'no file' ELSE CONCAT('${req.protocol}://${req.headers.host}/api/v1/download/', ${config.options.tableName}.id) END AS fileURL
       FROM ${config.options.tableName}
@@ -242,15 +242,15 @@ const search = async (req, res) =&gt; {
 &nbsp;
     const request = new sql.Request(pool);
     request.input('keyword', sql.NVarChar, `%${keyword}%`);
+    request.input('tableName', sql.NVarChar, config.options.tableName);
 &nbsp;
     const searchResult = await request.query(searchQuery);
-    res.status(200).send(searchResult.recordset);
 &nbsp;
-    
+    res.status(200).send(searchResult.recordset);
   } catch (error) {
-<span class="cstat-no" title="statement not covered" >    res.status(500).send({ error: 'search, Internal Server Error' });</span>
+    res.status(500).send({ error: 'search, Internal Server Error' });
   }
-};
+}
 &nbsp;
 module.exports = {
   search
@@ -262,7 +262,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-05-29T14:14:22.820Z
+                at 2023-05-31T18:15:44.986Z
             </div>
         <script src="../prettify.js"></script>
         <script>

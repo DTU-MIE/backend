@@ -12,17 +12,13 @@ router.post('/register', registerUser);
 //login user
 router.post('/login', loginUser);
 
-/*router.get('/profile', authenticateToken, (req, res) => {
+//to check if authentication works 
+router.get('/profile', authenticateToken, (req, res) => {
     res.send(req.user);
-});*/
-//router.post('/logout', authenticateToken, logoutUser);
-
+});
 //logout user
-// router.post('/logout', logoutUser);
-//only student can acccess this endpoint
-// router.get('/privilages', authorize(['student']), (req, res) => {
-//     res.json({ message: 'This endpoint can only be accessed by student' });
-//   });
+router.post('/logout', authenticateToken, logoutUser);
+
 
 module.exports = router;
 
