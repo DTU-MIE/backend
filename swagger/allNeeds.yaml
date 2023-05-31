@@ -1,0 +1,64 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation of MIE"
+basePath: "/"
+schemes:
+  - "http"
+  - "https"
+paths:
+  /api/v1/allneeds:
+    get:
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          type: "string"
+          description: "Authorization token (Bearer token)"
+      summary: Retrieves all needs
+      produces:
+        - "application/json"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              body:
+                type: array
+                items:
+                  $ref: '#/definitions/Need'
+        '500':
+          description: Internal Server Error
+definitions:
+  Need:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Unique identifier of the need
+      NeedIs:
+        type: string
+        description: Description of the need
+      Title:
+        type: string
+        description: Title of the need
+      ContactPerson:
+        type: string
+        description: Contact person for the need
+      CreatedAt:
+        type: string
+        format: date-time
+        description: Creation timestamp of the need
+      Keywords:
+        type: string
+        description: Keywords associated with the need
+      Proposal:
+        type: string
+        description: Proposal for the need
+      Solution:
+        type: string
+        description: Solution for the need
+      fileURL:
+        type: string
+        description: URL of the associated file, if available

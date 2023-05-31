@@ -15,13 +15,14 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const loginSpec = YAML.load('./swagger/login.yaml');
 const createNeedSpec = YAML.load('./swagger/createNeed.yaml');
+const allNeedsSpec = YAML.load('./swagger/allNeeds.yaml');
 const getNeedSpec = YAML.load('./swagger/getNeed.yaml');
 const downloadFileSpec = YAML.load('./swagger/downloadFile.yaml');
 const _ = require('lodash');
 const commentRoutes = require('./routes/commentRoutes');
 
 
-const apiSpec = _.merge({}, loginSpec, createNeedSpec, getNeedSpec, downloadFileSpec);
+const apiSpec = _.merge({}, loginSpec, createNeedSpec, allNeedsSpec, getNeedSpec, downloadFileSpec);
 /*
 const {
   REDIS_URL,

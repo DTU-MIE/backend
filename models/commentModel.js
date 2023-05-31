@@ -26,7 +26,7 @@ const insertComment = async (needID, comment, kind) => {
     } catch (err) {
       throw err;
     }
-  };
+};
   
 
 const getCommentsForNeed = async (needID) => {
@@ -47,7 +47,8 @@ const getCommentsForNeed = async (needID) => {
     console.log(err);
   }
 };
-  
+
+
 
 
 module.exports = {
