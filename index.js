@@ -33,7 +33,6 @@ const commentRoutes = require('./routes/commentRoutes');
 const apiSpec = _.merge({}, UserRegSpec, loginSpec, profileSpec, logoutSpec, authorizedSpec, 
   createNeedSpec, allNeedsSpec, getNeedSpec, downloadFileSpec, updateNeedSpec, deleteNeedSpec,
   searchSpec, addCommentSpec, getCommentSpec);
-
 /*
 const {
   REDIS_URL,
