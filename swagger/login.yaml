@@ -6,35 +6,45 @@ basePath: "/"
 schemes:
   - "http"
   - "https"
+
 paths:
   /api/v1/login:
     post:
+      tags:
+        - User Routes
       summary: "User login"
       consumes:
-        - "application/json"
+        - 'application/json'
       parameters:
-        - name: "body"
-          in: "body"
+        - name: body
+          in: body
           required: true
           schema:
-            type: "object"
-            properties:
-              email:
-                type: "string"
-                description: "email of the user."
-              password:
-                type: "string"
-                description: "password of the user."
+            $ref: '#/definitions/LoginRequest'
       responses:
         200:
-          description: "Success"
+          description: 'Success'
           schema:
-            type: "object"
-            properties:
-              token:
-                type: "string"
-                description: "authentication token for the user."
+            $ref: '#/definitions/LoginResponse'
+        403:
+          description: 'Invalid token'
         401:
-          description: "Unauthorized"
+          description: 'Unauthorized, no token provided'
         500:
-          description: "Internal Server Error"
+          description: 'Internal Server Error'
+definitions:
+  LoginRequest:
+    type: object
+    properties:
+      email:
+        type: string
+        description: 'email of the user.'
+      password:
+        type: string
+        description: 'password of the user.'
+  LoginResponse:
+    type: object
+    properties:
+      token:
+        type: string
+        description: 'authentication token for the user'

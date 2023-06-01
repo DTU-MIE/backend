@@ -1,0 +1,61 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation of MIE"
+basePath: "/"
+schemes:
+  - "http"
+  - "https"
+
+paths:
+  /api/v1/needs/{needID}/comments:
+    get:
+      tags:
+        - Comment Routes
+      summary: "Get comments by need ID"
+      parameters:
+        - name: Authorization
+          in: header
+          description: Authorization token (Bearer token)
+          required: true
+          type: string
+        - name: needID
+          in: path
+          description: ID of the need to retrieve comments for
+          required: true
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CommentIDResponse'
+        500:
+          description: Internal server error
+definitions:
+  CommentIDRequest:
+    type: object
+    properties:
+      Authorization:
+        type: string
+        description: 'authentication token for the user'
+      needID:
+        type: integer
+        description: 'ID of the need'
+  CommentIDResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Comment ID
+      needID:
+        type: integer
+        description: ID of the need associated with the comment
+      comment:
+        type: string
+        description: Comment content
+      created_at:
+        type: string
+        format: date-time
+        description: Comment creation timestamp

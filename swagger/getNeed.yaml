@@ -1,4 +1,4 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   version: "1.0.0"
   title: "API Documentation of MIE"
@@ -6,48 +6,67 @@ basePath: "/"
 schemes:
   - "http"
   - "https"
+
 paths:
   /api/v1/needs/{id}:
     get:
+      tags:
+        - Need Routes
       summary: "Get a need by ID"
       parameters:
-        - name: "Authorization"
-          in: "header"
+        - name: Authorization
+          in: header
           required: true
-          type: "string"
-          description: "Authorization token (Bearer token)"
+          type: string
+          description: 'Authorization token (Bearer token)'
         - in: path
           name: id
-          description: ID of the need to get
+          description: 'ID of the need to get'
           required: true
-          type: "integer"
+          type: integer
       responses:
         200:
-          description: OK
+          description: 'OK'
           schema:
-            type: object
-            properties:
-              body:
-                type: object
-                properties:
-                  ID:
-                    type: "integer"
-                  NeedIs:
-                    type: "string"
-                  Title:
-                    type: "string"
-                  ContactPerson:
-                    type: "string"
-                  CreatedAt:
-                    type: "string"
-                    format: date-time
-                  fileURL:
-                    type: "string"
-                    description: URL to download the file associated with the need
+            $ref: '#/definitions/GetNeedResponse'
         404:
-          description: Need is not found
+          description: 'Need is not found'
           schema:
-            type: object
-            properties:
-              message:
-                type: "string"
+            $ref: '#/definitions/Error'
+definitions:
+  GetNeedRequest:
+    type: object
+    properties:
+      Authorization:
+        type: string
+        description: 'authentication token for the user'
+      id:
+        type: integer
+  GetNeedResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+      NeedIs:
+        type: string
+      Title:
+        type: string
+      ContactPerson:
+        type: string
+      Keywords:
+        type: string
+      Proposal:
+        type: string
+      Solution:
+        type: string
+      CreatedAt:
+        type: string
+        format: date-time
+      fileURL:
+        type: string
+        description: 'URL to download the file associated with the need'
+  Error:
+    type: object
+    properties:
+      message:
+        type: string

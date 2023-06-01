@@ -9,13 +9,15 @@ async function search(req, res) {
   try {
     const pool = await sql.connect(config);
 
+    const tableExistsQuery = `
+      SELECT 1
+      FROM sys.tables
+      WHERE name = @tableName
+    `;
     const tableExistsResult = await pool
       .request()
-      .query(`
-        SELECT 1
-        FROM sys.tables
-        WHERE name = @tableName
-      `, [config.options.tableName]);
+      .input('tableName', sql.NVarChar, config.options.tableName)
+      .query(tableExistsQuery);
 
     const tableExists = tableExistsResult.recordset;
 
@@ -23,14 +25,16 @@ async function search(req, res) {
       throw new Error(`Table "${config.options.tableName}" does not exist in the database`);
     }
 
+    const columnsQuery = `
+      SELECT COLUMN_NAME
+      FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_NAME = @tableName
+        AND COLUMN_NAME IN ('ContactPerson', 'Title', 'NeedIs', 'CreatedAt')
+    `;
     const columnsResult = await pool
       .request()
-      .query(`
-        SELECT COLUMN_NAME
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = @tableName
-          AND COLUMN_NAME IN ('ContactPerson', 'Title', 'NeedIs', 'CreatedAt')
-      `, [config.options.tableName]); 
+      .input('tableName', sql.NVarChar, config.options.tableName)
+      .query(columnsQuery);
 
     const columns = columnsResult.recordset.map((columnRow) => {
       const columnName = columnRow.COLUMN_NAME;
@@ -49,12 +53,12 @@ async function search(req, res) {
 
     const request = new sql.Request(pool);
     request.input('keyword', sql.NVarChar, `%${keyword}%`);
-    request.input('tableName', sql.NVarChar, config.options.tableName);
 
     const searchResult = await request.query(searchQuery);
 
     res.status(200).send(searchResult.recordset);
   } catch (error) {
+    console.log(error)
     res.status(500).send({ error: 'search, Internal Server Error' });
   }
 }

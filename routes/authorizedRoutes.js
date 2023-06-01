@@ -5,7 +5,7 @@ const { authenticateToken,
 
 //only Sundhedsprofessionel can acccess this endpoint
 router.get('/privilages', authenticateToken, authorize, (req, res) => {
-    res.status(200).json({ message: 'Testing authorized access' })
+    res.status(200).json({ message: 'Route accessed' })
   });
 
 module.exports = router;

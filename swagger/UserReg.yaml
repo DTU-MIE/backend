@@ -1,0 +1,90 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation of MIE"
+basePath: "/"
+schemes:
+  - "http"
+  - "https"
+
+paths:
+  /api/v1/register:
+    post:
+      tags:
+        - User Routes
+      summary: "Register a new user"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: 'User details for registration'
+          required: true
+          schema:
+            $ref: '#/definitions/UserRegistrationRequest'
+      responses:
+        201:
+          description: 'User registered successfully'
+          schema:
+            $ref: '#/definitions/UserRegistrationResponse'
+        400:
+          description: 'Bad Request - Email already registered'
+          schema:
+            $ref: '#/definitions/BadRequestError'
+        500:
+          description: 'Internal Server Error'
+          schema:
+            $ref: '#/definitions/InternalServerError'
+        403:
+          description: 'Invalid token'
+        401:
+          description: 'Unauthorized, no token provided'
+
+definitions:
+  UserRegistrationRequest:
+    type: object
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+        description: "Email address with domain '@dtu.dk' or '@regionh.dk'"
+        pattern: "^[a-zA-Z0-9_.+-]+@(?:dtu\.dk|regionh\.dk)$"
+        example: "string"
+      password:
+        type: string
+      organization:
+        type: string
+        enum:
+          - Universitet
+          - Hospital
+        example: "string"
+      department:
+        type: string
+      profession:
+        type: string
+        enum:
+          - studerende
+          - Sundhedsprofessionel
+        example: "string"
+  UserRegistrationResponse:
+    type: object
+    properties:
+      userId:
+        type: string
+      message:
+        type: string
+      token:
+        type: string
+  BadRequestError:
+    type: object
+    properties:
+      message:
+        type: string
+  InternalServerError:
+    type: object
+    properties:
+      message:
+        type: string

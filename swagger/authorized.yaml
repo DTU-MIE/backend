@@ -1,0 +1,43 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation of MIE"
+basePath: "/"
+schemes:
+  - "http"
+  - "https"
+
+paths:
+  /api/v1/privilages:
+    get:
+      tags:
+        - Authourized Route
+      summary: "This endpoint checks user role for autherization"
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: 'Authorization token (Bearer token)'
+      responses:
+        200:
+          description: 'Route accessed'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        401:
+          description: 'Unauthorized, no token provided'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        403:
+          description: 'Access denied. Only Sundhedsprofessionel are allowed.'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string

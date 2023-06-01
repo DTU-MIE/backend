@@ -12,7 +12,7 @@ router.post('/register', registerUser);
 //login user
 router.post('/login', loginUser);
 
-//to check if authentication works 
+//to check if authentication works and gives user information
 router.get('/profile', authenticateToken, (req, res) => {
     res.send(req.user);
 });
@@ -21,5 +21,5 @@ router.post('/logout', authenticateToken, logoutUser);
 
 
 module.exports = router;
-
+ 
 

@@ -18,11 +18,22 @@ const createNeedSpec = YAML.load('./swagger/createNeed.yaml');
 const allNeedsSpec = YAML.load('./swagger/allNeeds.yaml');
 const getNeedSpec = YAML.load('./swagger/getNeed.yaml');
 const downloadFileSpec = YAML.load('./swagger/downloadFile.yaml');
+const updateNeedSpec = YAML.load('./swagger/updateNeed.yaml');
+const deleteNeedSpec = YAML.load('./swagger/deleteNeed.yaml');
+const UserRegSpec = YAML.load('./swagger/UserReg.yaml');
+const profileSpec = YAML.load('./swagger/profile.yaml');
+const logoutSpec = YAML.load('./swagger/logout.yaml');
+const authorizedSpec = YAML.load('./swagger/authorized.yaml');
+const searchSpec = YAML.load('./swagger/search.yaml');
+const addCommentSpec = YAML.load('./swagger/addComment.yaml');
+const getCommentSpec = YAML.load('./swagger/getComment.yaml');
 const _ = require('lodash');
 const commentRoutes = require('./routes/commentRoutes');
 
+const apiSpec = _.merge({}, UserRegSpec, loginSpec, profileSpec, logoutSpec, authorizedSpec, 
+  createNeedSpec, allNeedsSpec, getNeedSpec, downloadFileSpec, updateNeedSpec, deleteNeedSpec,
+  searchSpec, addCommentSpec, getCommentSpec);
 
-const apiSpec = _.merge({}, loginSpec, createNeedSpec, allNeedsSpec, getNeedSpec, downloadFileSpec);
 /*
 const {
   REDIS_URL,

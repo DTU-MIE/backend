@@ -6,21 +6,25 @@ basePath: "/"
 schemes:
   - "http"
   - "https"
+
 paths:
   /api/v1/allneeds:
     get:
+      tags:
+        - Need Routes
+      summary: "Get all needs"
       parameters:
-        - name: "Authorization"
-          in: "header"
+        - name: Authorization
+          in: header
           required: true
-          type: "string"
-          description: "Authorization token (Bearer token)"
+          type: string
+          description: 'Authorization token (Bearer token)'
       summary: Retrieves all needs
       produces:
-        - "application/json"
+        - 'application/json'
       responses:
-        '200':
-          description: Successful response
+        200:
+          description: 'Successful response'
           schema:
             type: object
             properties:
@@ -28,37 +32,54 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Need'
-        '500':
-          description: Internal Server Error
+        403:
+          description: 'Invalid token'
+        401:
+          description: 'Unauthorized, no token provided'
+        500:
+          description: 'Internal Server Error'
 definitions:
+  GetAllNeedRequest:
+    type: object
+    properties:
+      Authorization:
+        type: string
+        description: 'authentication token for the user'
+  GetAllNeedsResponse:
+    type: object
+    properties:
+      body:
+        type: array
+        items:
+          $ref: '#/definitions/Need'
   Need:
     type: object
     properties:
       id:
         type: integer
-        description: Unique identifier of the need
+        description: 'Unique identifier of the need'
       NeedIs:
         type: string
-        description: Description of the need
+        description: 'Description of the need'
       Title:
         type: string
-        description: Title of the need
+        description: 'Title of the need'
       ContactPerson:
         type: string
-        description: Contact person for the need
+        description: 'Contact person for the need'
       CreatedAt:
         type: string
         format: date-time
-        description: Creation timestamp of the need
+        description: 'Creation timestamp of the need'
       Keywords:
         type: string
-        description: Keywords associated with the need
+        description: 'Keywords associated with the need'
       Proposal:
         type: string
-        description: Proposal for the need
+        description: 'Proposal for the need'
       Solution:
         type: string
-        description: Solution for the need
+        description: 'Solution for the need'
       fileURL:
         type: string
-        description: URL of the associated file, if available
+        description: 'URL of the associated file, if available'

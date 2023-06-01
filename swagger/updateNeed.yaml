@@ -8,19 +8,21 @@ schemes:
   - "https"
 
 paths:
-  /api/v1/needs:
-    post:
+  /api/v1/update/needs/{id}:
+    put:
       tags:
         - Need Routes
-      summary: "Create a new need"
-      consumes:
-        - 'multipart/form-data'
+      summary: "Update a need"
       parameters:
         - name: Authorization
           in: header
           required: true
           type: string
           description: 'Authorization token (Bearer token)'
+        - name: id
+          in: path
+          description: 'ID of the need to update'
+          type: integer
         - name: NeedIs
           in: formData
           type: string
@@ -28,42 +30,42 @@ paths:
         - name: Title
           in: formData
           type: string
-          description: 'The title of the need.'
+          description: 'The title of the need'
         - name: ContactPerson
           in: formData
           type: string
-          description: 'The name of the contact person for the need.'
+          description: 'The name of the contact person for the need'
         - name: Keywords
           in: formData
           type: string
-          description: 'Keywords for the need.'
+          description: 'Keywords for the need'
         - name: Proposal
           in: formData
           type: string
-          description: 'Proposal for the need.'
+          description: 'Proposal for the need'
         - name: Solution
           in: formData
           type: string
-          description: 'Solution for the need.'
+          description: 'Solution for the need'                              
         - name: FileData
           in: formData
           type: file
-          description: 'This is an optional file attachment for the need.'
+          description: 'This is an optional file attachment for the need'
       responses:
         200:
-          description: 'Success'
+          description: 'Success response'
           schema:
-            $ref: '#/definitions/CreateNeedResponse'
-        400:
-          description: 'Bad Request'
+            $ref: '#/definitions/UpdateNeedResponse'
+        500:
+          description: 'Failed to update the need'
+          schema:
+            $ref: '#/definitions/Error'
         403:
           description: 'Invalid token'
         401:
           description: 'Unauthorized, no token provided'
-        500:
-          description: 'Internal Server Error'
 definitions:
-  CreateNeedRequest:
+  UpdateNeedRequest:
     type: object
     properties:
       Authorization:
@@ -71,29 +73,27 @@ definitions:
         description: 'authentication token for the user'
       NeedIs:
         type: string
-        description: 'Describe your need'
       Title:
         type: string
-        description: 'The title of the need.'
       ContactPerson:
         type: string
-        description: 'The name of the contact person for the need.'
       Keywords:
         type: string
-        description: 'Keywords for the need.'
       Proposal:
         type: string
-        description: 'Proposal for the need.'
       Solution:
         type: string
-        description: 'Solution for the need.'
       FileData:
         type: string
         format: binary
         description: 'any file'
-  CreateNeedResponse:
+  UpdateNeedResponse:
     type: object
     properties:
-      id:
-        type: integer
-        description: 'The ID of the newly created need.'
+      message:
+        type: string
+  Error:
+    type: object
+    properties:
+      error:
+        type: string

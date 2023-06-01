@@ -1,0 +1,109 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation of MIE"
+basePath: "/"
+schemes:
+  - "http"
+  - "https"
+
+paths:
+  /api/v1/search:
+    get:
+      tags:
+        - Search Route
+      summary: "Search records based on keyword"
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: 'Authorization token (Bearer token)'
+        - name: keyword
+          in: query
+          description: 'keyword to search for'
+          required: true
+          type: string
+        - name: pageNumber
+          in: query
+          description: 'page number of results'
+          required: false
+          type: integer
+        - name: resultsPerPage
+          in: query
+          description: 'number of results per page' 
+          required: false
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                ContactPerson:
+                  type: string
+                  description: 'The contact person name'
+                Title:
+                  type: string
+                  description: 'The title of the record'
+                NeedIs:
+                  type: string
+                  description: 'The need information'
+                CreatedAt:
+                  type: string
+                  description: 'The creation date of the record'
+                fileURL:
+                  type: string
+                  description: 'The URL of the file if available'
+
+        500:
+          description: 'search, Internal Server Error'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: 'search, Internal Server Error'
+
+definitions:
+  SearchRecordRequest:
+    type: object
+    properties:
+      Authorization:
+        type: string
+        description: 'authentication token for the user'
+      keyword:
+        type: string
+        description: 'keyword to search for'
+      pageNumber:
+        type: integer
+        description: 'page number of results'
+      resultsPerPage:
+        type: integer
+        description: 'number of results per page' 
+  SearchRecordResponse:
+    type: object
+    properties:
+      ContactPerson:
+        type: string
+        description: 'The contact person name'
+      Title:
+        type: string
+        description: 'The title of the record'
+      NeedIs:
+        type: string
+        description: 'The need information'
+      CreatedAt:
+        type: string
+        description: 'The creation date of the record'
+      fileURL:
+        type: string
+        description: 'The URL of the file if available'
+  ErrorResponse:
+    type: object
+    properties:
+      error:
+        type: string
+        description: 'search, Internal Server Error'

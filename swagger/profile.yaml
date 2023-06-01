@@ -8,51 +8,56 @@ schemes:
   - "https"
 
 paths:
-  /api/v1/download/{id}:
+  /api/v1/profile:
     get:
       tags:
-        - Need Routes
-      summary: "Download the file of a need"
+        - User Routes
+      summary: "Get user profile"
       parameters:
         - name: Authorization
           in: header
           required: true
           type: string
           description: 'Authorization token (Bearer token)'
-        - in: path
-          name: id
-          description: 'ID of the need to have the URL of the file'
-          required: true
-          type: integer
       responses:
         200:
           description: 'OK'
           schema:
-            type: file
-        404:
-          description: 'File/Need not found'
-          schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              id:
+                type: integer
+              email:
+                type: string
+              profession:
+                type: string
+              iat:
+                type: integer
+              exp:
+                type: integer
         403:
           description: 'Invalid token'
         401:
           description: 'Unauthorized, no token provided'
+        500:
+          description: 'Internal Server Error'
 definitions:
-  DownloadFileRequest:
+  UserProfileRequest:
     type: object
     properties:
       Authorization:
         type: string
         description: 'authentication token for the user'
+  UserProfileResponse:
+    type: object
+    properties:
       id:
         type: integer
-  DownloadFileResponse:
-    type: object
-    properties:
-      file:
-        type: file
-  Error:
-    type: object
-    properties:
-      message:
+      email:
         type: string
+      profession:
+        type: string
+      iat:
+        type: integer
+      exp:
+        type: integer

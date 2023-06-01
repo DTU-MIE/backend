@@ -1,0 +1,71 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation of MIE"
+basePath: "/"
+schemes:
+  - "http"
+  - "https"
+
+paths:
+  /api/v1/need/{needID}/comment:
+    post:
+      tags:
+        - Comment Routes
+      summary: "Add a comment to a need"
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: 'Authorization token (Bearer token)'
+        - name: needID
+          in: path
+          description: 'ID of the need to add a comment to'
+          required: true
+          type: integer
+        - name: CommentJSONBody
+          in: body
+          description: 'Comment body'
+          required: true
+          schema:
+            $ref: '#/definitions/CommentJSONBody'
+      responses:
+        200:
+          description: 'Comment added successfully'
+        500:
+          description: 'Internal server error'
+
+definitions:
+  CommentRequest:
+    type: object
+    properties:
+      Authorization:
+        type: string
+        description: 'authentication token for the user'
+      needID:
+        type: integer
+        description: 'ID of the need'
+      comment:
+        type: string
+        description: 'Comment content'
+      kind:
+        type: string
+        enum:
+          - Proposal
+          - Comment
+        description: 'Type of comment Proposal or Comment'
+        example: "string"
+  CommentJSONBody:
+    type: object
+    properties:
+      comment:
+        type: string
+        description: 'Comment content'
+      kind:
+        type: string
+        enum:
+          - Proposal
+          - Comment
+        description: 'Type of comment Proposal or Comment'
+        example: "string"

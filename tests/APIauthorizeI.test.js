@@ -41,7 +41,7 @@ describe('Authorization Test', () => {
 
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ message: 'Testing authorized access' });
+    expect(response.body).toEqual({ message: 'Route accessed' });
   });
 
   it('if no token provided return 401', async () => {

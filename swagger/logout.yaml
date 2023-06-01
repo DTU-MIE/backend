@@ -1,0 +1,44 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation of MIE"
+basePath: "/"
+schemes:
+  - "http"
+  - "https"
+
+paths:
+  /api/v1/logout:
+    post:
+      tags:
+        - User Routes
+      summary: "Logout user"
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: 'Authorization token (Bearer token)'
+      responses:
+        200:
+          description: 'user is logged out'
+        401:
+          description: 'Unauthorized, no token provided'
+        403:
+          description: 'Invalid token'
+        500:
+          description: 'Internal Server Error'
+
+definitions:
+  LogoutRequest:
+    type: object
+    properties:
+      Authorization:
+        type: string
+        description: 'authentication token for the user'
+  LogoutResponse:
+    type: object
+    properties:
+      message:
+        type: string
+

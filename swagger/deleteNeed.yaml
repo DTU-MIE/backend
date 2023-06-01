@@ -1,0 +1,84 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API Documentation of MIE"
+basePath: "/"
+schemes:
+  - "http"
+  - "https"
+
+paths:
+  /api/v1/delete/{id}:
+    delete:
+      tags:
+        - Delete Route
+      summary: "Delete a need using ID"
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+          description: 'Authorization token (Bearer token)'
+        - name: id
+          in: path
+          description: 'ID of the need to delete'
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 'Need deleted successfully'
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              message:
+                type: string
+        403:
+          description: 'Invalid token'
+        401:
+          description: 'Unauthorized, no token provided'
+        404:
+          description: 'Need not found'
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+        500:
+          description: 'Internal Server Error'
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: false
+              message:
+                type: string
+definitions:
+  DeleteNeedRequest:
+    type: object
+    properties:
+      Authorization:
+        type: string
+        description: 'authentication token for the user'
+      id:
+        type: integer
+  DeleteNeedResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+  DeleteNeedErrorResponse:
+    type: object
+    properties:
+      success:
+        type: boolean
+        example: false
+      message:
+        type: string
