@@ -4,6 +4,6 @@ const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.delete('/delete/:id', authenticateToken, needController.deleted);
+router.delete('/delete/:id', needController.deleted);
 
 module.exports = router;
