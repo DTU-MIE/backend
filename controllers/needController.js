@@ -31,9 +31,10 @@ const getNeed = async (req, res) => {
       CreatedAt: need.CreatedAt,
     };
     const isLocal = req.headers.host.startsWith('localhost');
+    const protocol = isLocal ? 'http' : 'https';
     const ipAddress = isLocal ? 'localhost:3002' : 'www.innocloud.dk'; 
     
-    const fileURL = need.HasFile === 'file' ? `${req.protocol}://${ipAddress}/api/v1/download/${need.id}` : 'no file';
+    const fileURL = need.HasFile === 'file' ? `${protocol}://${ipAddress}/api/v1/download/${need.id}` : 'no file';
     responseBody.fileURL = fileURL;
     res.json({ body: responseBody });
 
@@ -67,7 +68,11 @@ const allNeeds = async (req, res) => {
     const needs = await model.getAllNeeds();
 
     const responseBody = needs.map((need) => {
-      const fileURL = need.HasFile === 'file' ? `${req.protocol}://${req.headers.host}/api/v1/download/${need.id}` : 'no file';
+      const isLocal = req.headers.host.startsWith('localhost');
+      const protocol = isLocal ? 'http' : 'https';
+      const ipAddress = isLocal ? 'localhost:3002' : 'www.innocloud.dk'; 
+      
+      const fileURL = need.HasFile === 'file' ? `${protocol}://${ipAddress}/api/v1/download/${need.id}` : 'no file';
       return {
         id: need.id,
         NeedIs: need.NeedIs,
