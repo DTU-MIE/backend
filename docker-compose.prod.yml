@@ -35,7 +35,7 @@ services:
       - MSSQL_USER=${MSSQL_USER}
       - MSSQL_PID=Developer
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mie:/var/lib/mysql
 
 volumes:
-  mysql_data:
+  mie:
