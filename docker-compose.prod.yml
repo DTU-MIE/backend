@@ -31,3 +31,5 @@ services:
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - MSSQL_USER=${MSSQL_USER}
       - MSSQL_PID=Developer
+    volumes:
+      - ./data:/var/opt/mssql

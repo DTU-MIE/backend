@@ -4,7 +4,7 @@ const { authenticateToken,
   authorize} = require('../middleware/auth');
 
 //only Sundhedsprofessionel can acccess this endpoint
-router.get('/privilages', authenticateToken, authorize, (req, res) => {
+router.get('/privilages', authorize, (req, res) => {
     res.status(200).json({ message: 'Route accessed' })
   });
 
