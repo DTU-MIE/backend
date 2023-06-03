@@ -19,6 +19,8 @@ services:
     volumes:
       - ./:/app #syncs data within the container from local 
       - /app/node_modules #anonymous volume
+    depends_on:
+      - sql
     environment:
       - NODE_ENV=development
       - SESSION_SECRET=${SESSION_SECRET}

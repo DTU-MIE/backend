@@ -17,8 +17,7 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - AUTH_KEY=${AUTH_KEY}
       - DATA_TABLE_NAME=${DATA_TABLE_NAME}
-    depends_on:
-      - sql
+
 
   sql:
     container_name: sql
