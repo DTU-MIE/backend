@@ -14,6 +14,9 @@ services:
       context: .
       args: 
         NODE_ENV: production
+    volumes:
+      - ./:/app #syncs data within the container from local 
+      - /app/node_modules #anonymous volume
     environment:
       - NODE_ENV=production
       - MSSQL_HOST=${MSSQL_HOST}
