@@ -35,7 +35,7 @@ services:
       - MSSQL_USER=${MSSQL_USER}
       - MSSQL_PID=Developer
     volumes:
-      - mie:/var/opt/mssql/data
+      - mie:/var/opt/mssql
 
 volumes:
   mie:
