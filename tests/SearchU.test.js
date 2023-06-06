@@ -4,8 +4,8 @@ const sql = require("mssql");
 jest.mock("mssql", () => {
   const mockQuery = jest.fn().mockResolvedValue({
     recordset: [
-      { ContactPerson: "arooj", Title: "Title 1", NeedIs: "Need 1", CreatedAt: "2023-01-01" },
-      { ContactPerson: "arooj", Title: "Title 2", NeedIs: "Need 2", CreatedAt: "2023-01-02" },
+      { ContactPerson: "arooj", Title: "Title 1", NeedIs: "Need 1", CreatedAt: "2023-01-01", fileURL: "http://localhost:3002/api/v1/download/1" },
+      { ContactPerson: "arooj", Title: "Title 2", NeedIs: "Need 2", CreatedAt: "2023-01-02", fileURL: "http://localhost:3002/api/v1/download/2" },
     ],
   });
 
@@ -59,22 +59,22 @@ describe("search function", () => {
       expect(sql.Request.mock.instances[0].query).toHaveBeenCalledTimes(1);
       expect(res.status).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith([
-        { ContactPerson: "arooj", Title: "Title 1", NeedIs: "Need 1", CreatedAt: "2023-01-01" },
-        { ContactPerson: "arooj", Title: "Title 2", NeedIs: "Need 2", CreatedAt: "2023-01-02" },
+        { ContactPerson: "arooj", Title: "Title 1", NeedIs: "Need 1", CreatedAt: "2023-01-01", fileURL: "http://localhost:3002/api/v1/download/1" },
+        { ContactPerson: "arooj", Title: "Title 2", NeedIs: "Need 2", CreatedAt: "2023-01-02", fileURL: "http://localhost:3002/api/v1/download/2" },
       ]);
     } catch (error) {
      
     }
-  })
+  });
+
   it("should handle errors and return 500 status", async () => {
     sql.connect.mockRejectedValue(new Error("Connection error"));
   
     try {
       await search(req, res);
-  
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.send).toHaveBeenCalledWith({ error: "search, Internal Server Error" });
     } catch (error) {
     }
-  })
+  });
 });

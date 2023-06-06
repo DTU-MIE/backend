@@ -29,16 +29,4 @@ services:
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - MSSQL_USER=${MSSQL_USER}
       - MSSQL_PID=Developer
-  # test:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.test
-  #   ports:
-  #     - "1434:1433"      
-  #   depends_on:
-  #     - sql
-
-
-  # redis:
-  #   image: redis
 

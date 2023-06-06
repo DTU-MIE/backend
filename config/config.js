@@ -16,6 +16,7 @@ const SESSION_SECRET= process.env.SESSION_SECRET;
 console.log(SESSION_SECRET)
 const API_KEY= process.env.API_KEY || 'keyxH90r5GgPBip9q';
 const BASE_KEY= process.env.BASE_KEY || 'appS0HcQMolux76kh';
+
 const dbConfig = {  
     database: "mie",
     server: "sql",
@@ -29,14 +30,12 @@ const dbConfig = {
     options: {
         tableName: DATA_TABLE_NAME
     }
-    
-
 }; 
 
 const config = {  
     server: "sql",
     database: "mie",
-    host: "localhost",
+    host: MSSQL_HOST,
     user: MSSQL_USER, 
     password: MSSQL_SA_PASSWORD, 
     enableArithAbort: true,

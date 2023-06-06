@@ -1,8 +1,5 @@
 const express = require("express");
-// const session = require("express-session");
-// const redis = require("redis");
 const cors = require("cors");
-//let RedisStore = require("connect-redis").default;
 
 const userRoutes = require('./routes/userRoutes');
 const needRoutes = require('./routes/needRoutes');
@@ -33,28 +30,7 @@ const commentRoutes = require('./routes/commentRoutes');
 const apiSpec = _.merge({}, UserRegSpec, loginSpec, profileSpec, logoutSpec, authorizedSpec, 
   createNeedSpec, allNeedsSpec, getNeedSpec, downloadFileSpec, updateNeedSpec, deleteNeedSpec,
   searchSpec, addCommentSpec, getCommentSpec);
-/*
-const {
-  REDIS_URL,
-  SESSION_SECRET,
-  REDIS_PORT
-} = require("./config/config");
 
-const redisClient = redis.createClient({
-  socket: {
-    host: REDIS_URL,
-    port: REDIS_PORT
-},
-});
-(async () => {
-    await redisClient.connect();
-})();
-console.log("Connecting to Redis");
-
-redisClient.on('error', err => {
-    console.log('Error ' + err);
-});
-*/
 const app = express();
 
 const bodyParser = require('body-parser');
@@ -72,20 +48,6 @@ app.use((req, res, next) => {
 }));
 
   
-
-/*app.use(
-  session({
-    store: new RedisStore({ client: redisClient }),
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false,
-      httpOnly: true,
-      maxAge: 30000,
-    },
-  })
-);*/
 
 
 app.use(express.json());
