@@ -10,6 +10,8 @@ const MSSQL_SA_PASSWORD = process.env.MSSQL_SA_PASSWORD;
 const SECRET_KEY = process.env.SECRET_KEY;
 const AUTH_KEY = process.env.AUTH_KEY;
 const DATA_TABLE_NAME = process.env.DATA_TABLE_NAME;
+const DATABASE_NAME  = process.env.DATABASE_NAME;
+const SERVER_NAME  = process.env.SERVER_NAME;
 console.log(DATA_TABLE_NAME)
 const port = 1433;
 const SESSION_SECRET= process.env.SESSION_SECRET;
@@ -18,8 +20,8 @@ const API_KEY= process.env.API_KEY || 'keyxH90r5GgPBip9q';
 const BASE_KEY= process.env.BASE_KEY || 'appS0HcQMolux76kh';
 
 const dbConfig = {  
-    database: "mie",
-    server: "sql",
+    database: DATABASE_NAME,
+    server: SERVER_NAME,
     host: MSSQL_HOST,
     user: MSSQL_USER, 
     password: MSSQL_SA_PASSWORD, 
