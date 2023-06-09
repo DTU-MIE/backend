@@ -92,7 +92,6 @@ const allNeeds = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-
 const updated = async (req, res) => {
   const { id } = req.params;
   const { NeedIs, Title, ContactPerson, Keywords, Proposal, Solution } = req.body;
@@ -101,7 +100,7 @@ const updated = async (req, res) => {
   const extension = FileName ? FileName.split('.').pop() : null;
   const createdAt = new Date();
 
-  const updatedData = {
+  const need = {
     NeedIs,
     Title,
     ContactPerson,
@@ -117,22 +116,28 @@ const updated = async (req, res) => {
   try {
     const UserId = req.user.id; 
 
-    const need = await model.getNeedById(id); 
-    if (!need) {
+    const existingNeed = await model.getNeedById(id); 
+    if (!existingNeed) {
       return res.status(404).json({ error: 'Need not found' });
     }
 
-    if (need.UserId !== UserId) {
+    if (existingNeed.UserId !== UserId) {
       return res.status(403).json({ error: 'Unauthorized to update the need' });
     }
 
-    await model.updateNeed(id, updatedData);
-    res.json({ message: 'Need updated successfully' });
+    const isUpdated = await model.updateNeed(id, need);
+    console.log(isUpdated)
+    if (isUpdated) {
+      res.status(200).json({ message: 'Need updated successfully' });
+    } else {
+      res.status(404).json({ message: 'Need not found/Need is not updated' });
+    }
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Failed to update the need' });
   }
 };
+
 
 async function deleted(req, res) {
   const { id } = req.params;

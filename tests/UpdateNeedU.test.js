@@ -4,7 +4,7 @@ const { updateNeed } = require('../models/needModel');
 jest.mock('mssql');
 
 describe('updateNeed', () => {
-  it('update the need in the database', async () => {
+  it('updates the need in the database', async () => {
     const id = 1;
     const updatedNeed = {
       NeedIs: 'New Need',
@@ -17,52 +17,56 @@ describe('updateNeed', () => {
       FileName: null,
       extension: null,
       createdAt: new Date(),
-      UserId: 123, // Add the UserId property
+      UserId: 123,
     };
 
-    const mockInput = jest.fn().mockReturnThis();
-    const mockQuery = jest.fn().mockResolvedValue({ recordset: [] });
-    const mockClose = jest.fn();
-
+    const mockQuery = jest.fn();
+    const mockInput = jest.fn();
     const mockRequest = jest.fn(() => ({
-      input: mockInput,
       query: mockQuery,
+      input: mockInput,
     }));
+    const mockConnect = jest.fn();
 
-    sql.connect.mockResolvedValue({
-      request: mockRequest,
-      close: mockClose,
-    });
+    sql.connect = mockConnect;
+    sql.connect.mockResolvedValue({ request: mockRequest });
+
+    const mockResult = {
+      rowsAffected: [1], 
+    };
+
+    mockQuery.mockResolvedValue(mockResult);
 
     const result = await updateNeed(id, updatedNeed);
 
     expect(sql.connect).toHaveBeenCalled();
-
     expect(mockRequest).toHaveBeenCalled();
-    expect(mockRequest).toHaveBeenCalledWith();
-
     expect(mockInput).toHaveBeenCalledTimes(12);
-    expect(mockInput).toHaveBeenCalledWith('NeedIs', sql.NVarChar(4000), 'New Need');
-    expect(mockInput).toHaveBeenCalledWith('Title', sql.NVarChar(1000), 'Updated Title');
-    expect(mockInput).toHaveBeenCalledWith('ContactPerson', sql.NVarChar(1000), 'arooj');
-    expect(mockInput).toHaveBeenCalledWith('Keywords', sql.NVarChar(1000), 'keyword1, keyword2');
-    expect(mockInput).toHaveBeenCalledWith('Proposal', sql.NVarChar(1000), 'Updated Proposal');
-    expect(mockInput).toHaveBeenCalledWith('Solution', sql.NVarChar(1000), 'Updated Solution');
-    expect(mockInput).toHaveBeenCalledWith('FileData', sql.VarBinary(sql.MAX), null);
-    expect(mockInput).toHaveBeenCalledWith('FileName', sql.NVarChar(255), null);
-    expect(mockInput).toHaveBeenCalledWith('extension', sql.NVarChar(10), null);
-    expect(mockInput).toHaveBeenCalledWith('createdAt', sql.DateTime, expect.any(Date));
-    expect(mockInput).toHaveBeenCalledWith('UserId', sql.Int, 123); 
-    expect(mockInput).toHaveBeenCalledWith('id', sql.Int, 1);
-
     expect(mockQuery).toHaveBeenCalled();
-    expect(mockQuery).toHaveBeenCalledWith(expect.any(String));
 
-    expect(mockClose).toHaveBeenCalled();
+    expect(mockInput.mock.calls).toEqual([
+      ['NeedIs', sql.NVarChar(4000), 'New Need'],
+      ['Title', sql.NVarChar(1000), 'Updated Title'],
+      ['ContactPerson', sql.NVarChar(1000), 'arooj'],
+      ['Keywords', sql.NVarChar(1000), 'keyword1, keyword2'],
+      ['Proposal', sql.NVarChar(1000), 'Updated Proposal'],
+      ['Solution', sql.NVarChar(1000), 'Updated Solution'],
+      ['FileData', sql.VarBinary(sql.MAX), null],
+      ['FileName', sql.NVarChar(255), null],
+      ['extension', sql.NVarChar(10), null],
+      ['createdAt', sql.DateTime, expect.any(Date)],
+      ['id', sql.Int, id],
+      ['UserId', sql.Int, 123],
+    ]);
 
-    expect(result).toEqual(expect.any(Array));
+    expect(mockQuery).toHaveBeenCalledWith(
+      `UPDATE NEED SET NeedIs = @NeedIs, Title = @Title, ContactPerson = @ContactPerson,
+      Keywords = @Keywords, Proposal = @Proposal, Solution = @Solution, FileData = @FileData,
+      FileName = @FileName, extension = @extension, createdAt = @createdAt WHERE id = @id`
+    );
+
+    expect(result).toBe(true);
   });
-
   it('throw an error if update fails', async () => {
     const id = 1;
     const updatedNeed = {

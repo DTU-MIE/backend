@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.5% </span>
+                <span class="strong">96.38% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>78/80</span>
+                <span class='fraction'>80/83</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95% </span>
+                <span class="strong">92.85% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>38/40</span>
+                <span class='fraction'>39/42</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.5% </span>
+                <span class="strong">96.38% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>78/80</span>
+                <span class='fraction'>80/83</span>
             </div>
         
             
@@ -232,7 +232,11 @@
 <a name='L167'></a><a href='#L167'>167</a>
 <a name='L168'></a><a href='#L168'>168</a>
 <a name='L169'></a><a href='#L169'>169</a>
-<a name='L170'></a><a href='#L170'>170</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">12x</span>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -326,7 +330,6 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -362,9 +365,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -394,7 +403,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -495,7 +503,6 @@ const allNeeds = async (req, res) =&gt; {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
-&nbsp;
 const updated = async (req, res) =&gt; {
   const { id } = req.params;
   const { NeedIs, Title, ContactPerson, Keywords, Proposal, Solution } = req.body;
@@ -504,7 +511,7 @@ const updated = async (req, res) =&gt; {
   const extension = FileName ? FileName.split('.').pop() : null;
   const createdAt = new Date();
 &nbsp;
-  const updatedData = {
+  const need = {
     NeedIs,
     Title,
     ContactPerson,
@@ -520,22 +527,28 @@ const updated = async (req, res) =&gt; {
   try {
     const UserId = req.user.id; 
 &nbsp;
-    const need = await model.getNeedById(id); 
-    if (!need) {
+    const existingNeed = await model.getNeedById(id); 
+    if (!existingNeed) {
       return res.status(404).json({ error: 'Need not found' });
     }
 &nbsp;
-    if (need.UserId !== UserId) {
+    if (existingNeed.UserId !== UserId) {
       return res.status(403).json({ error: 'Unauthorized to update the need' });
     }
 &nbsp;
-    await model.updateNeed(id, updatedData);
-    res.json({ message: 'Need updated successfully' });
+    const isUpdated = await model.updateNeed(id, need);
+    console.log(isUpdated)
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (isUpdated) {
+<span class="cstat-no" title="statement not covered" >      res.status(200).json({ message: 'Need updated successfully' });</span>
+    } else {
+      res.status(404).json({ message: 'Need not found/Need is not updated' });
+    }
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: 'Failed to update the need' });
   }
 };
+&nbsp;
 &nbsp;
 async function deleted(req, res) {
   const { id } = req.params;
@@ -569,15 +582,14 @@ module.exports = {
   allNeeds,
   updated,
   deleted
-};
-&nbsp;</pre></td></tr></table></pre>
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-06-08T12:56:06.300Z
+                at 2023-06-09T06:11:35.739Z
             </div>
         <script src="../prettify.js"></script>
         <script>

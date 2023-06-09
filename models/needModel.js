@@ -55,30 +55,28 @@ const getAllNeeds = async () => {
     return result.recordset;
 };
 
-const updateNeed = async (id, updatedNeed) => {
+const updateNeed = async (id, need) => {
     const pool = await sql.connect(dbConfig);
     const request = pool.request();
-    request.input('NeedIs', sql.NVarChar(4000), updatedNeed.NeedIs);
-    request.input('Title', sql.NVarChar(1000), updatedNeed.Title);
-    request.input('ContactPerson', sql.NVarChar(1000), updatedNeed.ContactPerson);
-    request.input('Keywords', sql.NVarChar(1000), updatedNeed.Keywords);
-    request.input('Proposal', sql.NVarChar(1000), updatedNeed.Proposal);
-    request.input('Solution', sql.NVarChar(1000), updatedNeed.Solution);
-    request.input('FileData', sql.VarBinary(sql.MAX), updatedNeed.FileData);
-    request.input('FileName', sql.NVarChar(255), updatedNeed.FileName);
-    request.input('extension', sql.NVarChar(10), updatedNeed.extension);
-    request.input('createdAt', sql.DateTime, updatedNeed.createdAt);
-    request.input('id', sql.Int, id);
-    request.input('UserId', sql.Int, updatedNeed.UserId);
 
     const query = `UPDATE NEED SET NeedIs = @NeedIs, Title = @Title, ContactPerson = @ContactPerson,
       Keywords = @Keywords, Proposal = @Proposal, Solution = @Solution, FileData = @FileData,
-      FileName = @FileName, extension = @extension, createdAt = @createdAt WHERE id = @id AND UserId = @UserId`;
-  
+      FileName = @FileName, extension = @extension, createdAt = @createdAt WHERE id = @id`;
+    request.input('NeedIs', sql.NVarChar(4000), need.NeedIs);
+    request.input('Title', sql.NVarChar(1000), need.Title);
+    request.input('ContactPerson', sql.NVarChar(1000), need.ContactPerson);
+    request.input('Keywords', sql.NVarChar(1000), need.Keywords);
+    request.input('Proposal', sql.NVarChar(1000), need.Proposal);
+    request.input('Solution', sql.NVarChar(1000), need.Solution);
+    request.input('FileData', sql.VarBinary(sql.MAX), need.FileData);
+    request.input('FileName', sql.NVarChar(255), need.FileName);
+    request.input('extension', sql.NVarChar(10), need.extension);
+    request.input('createdAt', sql.DateTime, need.createdAt);
+    request.input('id', sql.Int, id);
+    request.input('UserId', sql.Int, need.UserId);
 
     const result = await request.query(query);
-    await pool.close();
-    return result.recordset;
+    return result.rowsAffected.length > 0;
 };
 
 async function deleteNeed(id, UserId) {
