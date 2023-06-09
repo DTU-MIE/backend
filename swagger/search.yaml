@@ -51,6 +51,15 @@ paths:
                 NeedIs:
                   type: string
                   description: 'The need information'
+                Keywords:
+                  type: string
+                  description: 'The keywords of Need'
+                Proposal:
+                  type: string
+                  description: 'The Proposal for Need'
+                Solution:
+                  type: string
+                  description: 'The Solution for Need'
                 CreatedAt:
                   type: string
                   description: 'The creation date of the record'
@@ -95,6 +104,15 @@ definitions:
       NeedIs:
         type: string
         description: 'The need information'
+      Keywords:
+        type: string
+        description: 'The keywords of Need'
+      Proposal:
+        type: string
+        description: 'The Proposal for Need'
+      Solution:
+        type: string
+        description: 'The Solution for Need'
       CreatedAt:
         type: string
         description: 'The creation date of the record'

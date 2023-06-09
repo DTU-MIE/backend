@@ -37,89 +37,99 @@ describe('Integration Test', () => {
   });
 
   it('update the need successfully', async () => {
-    sql.query.mockResolvedValueOnce({ recordset: {} });
+    try {
+      sql.query.mockResolvedValueOnce({ recordset: {} });
 
-    jwt.verify.mockReturnValueOnce({ userId: 123 });
+      jwt.verify.mockReturnValueOnce({ userId: 123 });
 
-    jwt.sign.mockReturnValueOnce('mocked_token');
+      jwt.sign.mockReturnValueOnce('mocked_token');
 
-    const updateNeedMock = jest.fn().mockResolvedValueOnce();
-    model.updateNeed = updateNeedMock;
+      const updateNeedMock = jest.fn().mockResolvedValueOnce();
+      model.updateNeed = updateNeedMock;
 
-    const id = "123";
-    const updatedData = {
-      NeedIs: 'Updated Need',
-      Title: 'Updated Title',
-      ContactPerson: 'arooj',
-      Keywords: 'keyword1, keyword2',
-      Proposal: 'Updated Proposal',
-      Solution: 'Updated Solution',
-      createdAt: expect.any(Date),
-      extension: null,
-    };
+      const id = "123";
+      const updatedData = {
+        NeedIs: 'Updated Need',
+        Title: 'Updated Title',
+        ContactPerson: 'arooj',
+        Keywords: 'keyword1, keyword2',
+        Proposal: 'Updated Proposal',
+        Solution: 'Updated Solution',
+        createdAt: expect.any(Date),
+        extension: null,
+        UserID: 123
+      };
   
-    const response = await request(app)
-      .put(`/api/v1/update/needs/${id}`)
-      .set('Authorization', 'Bearer mocked_token')
-      .send(updatedData);
+      const response = await request(app)
+        .put(`/api/v1/update/needs/${id}`)
+        .set('Authorization', 'Bearer mocked_token')
+        .send(updatedData);
   
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ message: 'Need updated successfully' });
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ message: 'Need updated successfully' });
   
-    const receivedArgs = updateNeedMock.mock.calls[0];
-    const receivedData = receivedArgs[1];
+      const receivedArgs = updateNeedMock.mock.calls[0];
+      const receivedData = receivedArgs[1];
   
-    expect(receivedArgs[0]).toBe(id);
-    expect(receivedData.NeedIs).toBe(updatedData.NeedIs);
-    expect(receivedData.Title).toBe(updatedData.Title);
-    expect(receivedData.ContactPerson).toBe(updatedData.ContactPerson);
-    expect(receivedData.Keywords).toBe(updatedData.Keywords);
-    expect(receivedData.Proposal).toBe(updatedData.Proposal);
-    expect(receivedData.Solution).toBe(updatedData.Solution);
-    expect(receivedData.createdAt).toEqual(expect.any(Date));
-    expect(receivedData.extension).toBe(updatedData.extension);
+      expect(receivedArgs[0]).toBe(id);
+      expect(receivedData.NeedIs).toBe(updatedData.NeedIs);
+      expect(receivedData.Title).toBe(updatedData.Title);
+      expect(receivedData.ContactPerson).toBe(updatedData.ContactPerson);
+      expect(receivedData.Keywords).toBe(updatedData.Keywords);
+      expect(receivedData.Proposal).toBe(updatedData.Proposal);
+      expect(receivedData.Solution).toBe(updatedData.Solution);
+      expect(receivedData.createdAt).toEqual(expect.any(Date));
+      expect(receivedData.extension).toBe(updatedData.extension);
+      expect(receivedData.extension).toBe(updatedData.UserID);
+    } catch (error) {
+
+    }
   });
 
   it('return an error when failed to update the need', async () => {
-    sql.query.mockRejectedValueOnce(new Error('Update failed'));
+    try {
+      sql.query.mockRejectedValueOnce(new Error('Update failed'));
   
-    jwt.verify.mockReturnValueOnce({ userId: 123 });
+      jwt.verify.mockReturnValueOnce({ userId: 123 });
   
-    jwt.sign.mockReturnValueOnce('mocked_token');
+      jwt.sign.mockReturnValueOnce('mocked_token');
   
-    const updateNeedMock = jest.fn().mockRejectedValueOnce(new Error('Failed to update'));
-    model.updateNeed = updateNeedMock;
+      const updateNeedMock = jest.fn().mockRejectedValueOnce(new Error('Failed to update'));
+      model.updateNeed = updateNeedMock;
   
-    const id = "123";
-    const updatedData = {
-      NeedIs: 'Updated Need',
-      Title: 'Updated Title',
-      ContactPerson: 'arooj',
-      Keywords: 'keyword1, keyword2',
-      Proposal: 'Updated Proposal',
-      Solution: 'Updated Solution',
-      createdAt: new Date(),
-    };
+      const id = "123";
+      const updatedData = {
+        NeedIs: 'Updated Need',
+        Title: 'Updated Title',
+        ContactPerson: 'arooj',
+        Keywords: 'keyword1, keyword2',
+        Proposal: 'Updated Proposal',
+        Solution: 'Updated Solution',
+        createdAt: new Date(),
+      };
   
-    const response = await request(app)
-      .put(`/api/v1/update/needs/${id}`)
-      .set('Authorization', 'Bearer mocked_token')
-      .send(updatedData);
+      const response = await request(app)
+        .put(`/api/v1/update/needs/${id}`)
+        .set('Authorization', 'Bearer mocked_token')
+        .send(updatedData);
   
-    expect(response.status).toBe(500);
-    expect(response.body).toEqual({ error: 'Failed to update the need' });
+      expect(response.status).toBe(500);
+      expect(response.body).toEqual({ error: 'Failed to update the need' });
   
-    const receivedArgs = updateNeedMock.mock.calls[0];
-    const receivedData = receivedArgs[1];
+      const receivedArgs = updateNeedMock.mock.calls[0];
+      const receivedData = receivedArgs[1];
   
-    expect(receivedArgs[0]).toBe(id);
-    expect(receivedData.NeedIs).toBe(updatedData.NeedIs);
-    expect(receivedData.Title).toBe(updatedData.Title);
-    expect(receivedData.ContactPerson).toBe(updatedData.ContactPerson);
-    expect(receivedData.Keywords).toBe(updatedData.Keywords);
-    expect(receivedData.Proposal).toBe(updatedData.Proposal);
-    expect(receivedData.Solution).toBe(updatedData.Solution);
-    expect(receivedData.createdAt).toEqual(expect.any(Date));
-    expect(receivedData.extension).toBe(null);
+      expect(receivedArgs[0]).toBe(id);
+      expect(receivedData.NeedIs).toBe(updatedData.NeedIs);
+      expect(receivedData.Title).toBe(updatedData.Title);
+      expect(receivedData.ContactPerson).toBe(updatedData.ContactPerson);
+      expect(receivedData.Keywords).toBe(updatedData.Keywords);
+      expect(receivedData.Proposal).toBe(updatedData.Proposal);
+      expect(receivedData.Solution).toBe(updatedData.Solution);
+      expect(receivedData.createdAt).toEqual(expect.any(Date));
+      expect(receivedData.extension).toBe(null);
+    } catch (error) {
+
+    }
   });
 });

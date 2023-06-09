@@ -68,7 +68,6 @@ async function createUser(userDetails) {
    
 
 async function getUserByEmailAndPassword(email, password) {
-    console.log('email:', email, 'password:', password);
     const pool = new sql.ConnectionPool(dbConfig);
     await pool.connect();
     try {

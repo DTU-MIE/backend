@@ -63,7 +63,7 @@ paths:
         403:
           description: 'Invalid token'
         401:
-          description: 'Unauthorized, no token provided'
+          description: 'Unauthorized to update the need'
 definitions:
   UpdateNeedRequest:
     type: object

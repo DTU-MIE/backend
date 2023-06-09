@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: "1.0.0"
   title: "API Documentation of MIE"
-basePath: "/"
+basePath: "/api/v1/api-docs"
 schemes:
   - "http"
   - "https"
@@ -45,6 +45,12 @@ definitions:
   LoginResponse:
     type: object
     properties:
+      status:
+        type: string
+        description: 'status of the login request'
       token:
         type: string
-        description: 'authentication token for the user'
+        description: 'JWT token for authentication'
+      UserId:
+        type: string
+        description: 'User ID'

@@ -29,8 +29,10 @@ describe('GET /search', () => {
       const token = auth.generateToken({ userId: 123 });
       searchController.search.mockImplementation(async (req, res) => {
         res.send([
-          { ContactPerson: 'arooj', Title: 'Title 1', NeedIs: 'Need 1', CreatedAt: '2023-01-01' },
-          { ContactPerson: 'arooj', Title: 'Title 2', NeedIs: 'Need 2', CreatedAt: '2023-01-02' },
+          { ContactPerson: 'arooj', Title: 'Title 1', NeedIs: 'Need 1', Keywords: "keywords 1", Proposal: "proposal 1", Solution: "solution 1",
+          CreatedAt: '2023-01-01' },
+          { ContactPerson: 'arooj', Title: 'Title 2', NeedIs: 'Need 2', Keywords: "keywords 2", Proposal: "proposal 2", Solution: "solution 2",
+          CreatedAt: '2023-01-02' },
         ]);
       });
   
@@ -40,8 +42,10 @@ describe('GET /search', () => {
   
       expect(response.status).toBe(200);
       expect(response.body).toEqual([
-        { ContactPerson: 'arooj', Title: 'Title 1', NeedIs: 'Need 1', CreatedAt: '2023-01-01' },
-        { ContactPerson: 'arooj', Title: 'Title 2', NeedIs: 'Need 2', CreatedAt: '2023-01-02' },
+        { ContactPerson: 'arooj', Title: 'Title 1', NeedIs: 'Need 1', Keywords: "keywords 1", Proposal: "proposal 1", Solution: "solution 1",
+        CreatedAt: '2023-01-01' },
+        { ContactPerson: 'arooj', Title: 'Title 2', NeedIs: 'Need 2', Keywords: "keywords 2", Proposal: "proposal 2", Solution: "solution 2",
+        CreatedAt: '2023-01-02' },
       ]);
   
       expect(searchController.search).toHaveBeenCalledTimes(1);

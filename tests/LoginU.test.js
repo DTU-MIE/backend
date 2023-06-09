@@ -60,7 +60,7 @@ describe('loginUser', () => {
       });
     
       expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.send).toHaveBeenCalledWith({ token: 'mock-token' });
+      expect(res.send).toHaveBeenCalledWith({ token: 'mock-token', userId: 123 });
     });
     it('error message if user is not found', async () => {
       getUserByEmailAndPassword.mockResolvedValueOnce(null);

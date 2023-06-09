@@ -1,56 +1,54 @@
-const model = require('../models/needModel'); 
-const { deleted } = require('../controllers/needController'); 
+const sql = require('mssql');
+const { deleteNeed } = require('../models/needModel');
+jest.mock('mssql');
 
-
-jest.mock('../models/needModel'); 
-
-describe('deleted', () => {
-    let req, res;
-  
-    beforeEach(() => {
-      req = { params: { id: '123' } };
-      res = {
-        status: jest.fn(() => res),
-        json: jest.fn(),
-      };
-    });
-  
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-  
-    test('delete the need', async () => {
-      model.deleteNeed.mockResolvedValue(true);
-  
-      await deleted(req, res);
-  
-
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith({ success: true, message: 'Need deleted successfully' });
-    });
-  
-    test('if the need is not found', async () => {
-      model.deleteNeed.mockResolvedValue(false);
-  
-      await deleted(req, res);
-  
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Need not found' });
-    });
-  
-    test('return error message if there is an error deleting the need', async () => {
-        const errorMessage = 'Database error';
-      
-        model.deleteNeed.mockRejectedValue(new Error(errorMessage));
-      
-        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-      
-        await deleted(req, res);
-      
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({ success: false, message: 'Failed to delete need' });
-        expect(consoleErrorSpy).toHaveBeenCalledWith('Error deleting need:', new Error(errorMessage));
-        consoleErrorSpy.mockRestore();
-      });
-      
+describe('deleteNeed', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
   });
+
+  it('should delete a need and return true if successful', async () => {
+    const request = {
+      input: jest.fn(),
+      query: jest.fn().mockResolvedValueOnce({ rowsAffected: [1] }),
+    };
+    const pool = {
+      request: jest.fn().mockReturnValue(request),
+    };
+    sql.connect.mockResolvedValueOnce(pool);
+
+    const result = await deleteNeed(1, 123); 
+
+    expect(result).toBe(true);
+    expect(sql.connect).toHaveBeenCalledTimes(1);
+    expect(pool.request).toHaveBeenCalledTimes(1);
+    expect(request.input).toHaveBeenCalledWith('id', sql.Int, 1);
+    expect(request.input).toHaveBeenCalledWith('UserId', sql.Int, 123); 
+    expect(request.query).toHaveBeenCalledWith('DELETE FROM NEED WHERE id = @id AND UserId = @UserId');
+    expect(sql.close).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return false if an error occurs', async () => {
+    const request = {
+      input: jest.fn(),
+      query: jest.fn().mockRejectedValueOnce(new Error('Mocked error')),
+    };
+    const pool = {
+      request: jest.fn().mockReturnValue(request),
+    };
+    sql.connect.mockResolvedValueOnce(pool);
+
+    console.error = jest.fn();
+
+    const result = await deleteNeed(1, 123); 
+
+    expect(result).toBe(false);
+    expect(sql.connect).toHaveBeenCalledTimes(1);
+    expect(pool.request).toHaveBeenCalledTimes(1);
+    expect(request.input).toHaveBeenCalledWith('id', sql.Int, 1);
+    expect(request.input).toHaveBeenCalledWith('UserId', sql.Int, 123); 
+    expect(request.query).toHaveBeenCalledWith('DELETE FROM NEED WHERE id = @id AND UserId = @UserId');
+    expect(console.error).toHaveBeenCalledWith('Error deleting need:', expect.any(Error));
+    expect(sql.close).toHaveBeenCalledTimes(1);
+  });
+});

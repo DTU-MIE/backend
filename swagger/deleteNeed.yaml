@@ -11,7 +11,7 @@ paths:
   /api/v1/delete/{id}:
     delete:
       tags:
-        - Delete Route
+        - Need Routes
       summary: "Delete a need using ID"
       parameters:
         - name: Authorization
@@ -35,7 +35,7 @@ paths:
               message:
                 type: string
         403:
-          description: 'Invalid token'
+          description: 'Unauthorized to delete the need'
         401:
           description: 'Unauthorized, no token provided'
         404:

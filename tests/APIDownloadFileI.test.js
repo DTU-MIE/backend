@@ -9,7 +9,7 @@ const config = require('../config/config');
 
 const mockNeed = {
   ID: 1,
-  FileData: Buffer.from('mocked_file_data').toString('base64'),
+  FileData: Buffer.from('filedata'),
   extension: 'pdf',
   FileName: 'mocked_file.pdf',
 };
@@ -49,7 +49,7 @@ describe('Download File API', () => {
     expect(response.status).toBe(200);
     expect(response.header['content-type']).toBe('application/pdf');
     expect(response.header['content-disposition']).toBe('attachment; filename=mocked_file.pdf');
-    expect(response.body.toString('base64')).toBe(Buffer.from('mocked_file_data').toString('base64'));
+    expect(response.body).toEqual(mockNeed.FileData);
     expect(model.getNeedById).toHaveBeenCalledWith('1');
     expect(jwt.verify).toHaveBeenCalledWith(mockToken, 'mocked_auth_key');
   });

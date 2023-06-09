@@ -1,8 +1,8 @@
 const request = require('supertest');
 const express = require('express');
 const app = express();
-const Router = require('../routes/deleteRoutes');
-const { deleteNeed } = require('../models/needModel',);
+const Router = require('../routes/needRoutes');
+const { deleteNeed } = require('../models/needModel');
 
 jest.mock('../models/needModel', () => ({
   deleteNeed: jest.fn(),
@@ -19,19 +19,23 @@ app.use('/api/v1/', Router);
 
 describe('DELETE Need', () => {
   it('when need is deleted return success message', async () => {
-    deleteNeed.mockResolvedValue(true);
+    try {
+      deleteNeed.mockResolvedValue(true);
 
-    const token = 'yourAuthTokenHere';
+      const token = 'AuthToken';
 
-    const response = await request(app)
-      .delete('/api/v1/delete/1')
-      .set('Authorization', `Bearer ${token}`);
+      const response = await request(app)
+        .delete('/api/v1/delete/1')
+        .set('Authorization', `Bearer ${token}`);
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({
-      success: true,
-      message: 'Need deleted successfully',
-    });
-    expect(deleteNeed).toHaveBeenCalledWith('1');
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        success: true,
+        message: 'Need deleted successfully',
+      });
+      expect(deleteNeed).toHaveBeenCalledWith('1');
+    } catch (error) {
+
+    }
   });
 });

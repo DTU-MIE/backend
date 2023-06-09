@@ -23,7 +23,7 @@ describe('downloadFile', () => {
     };
     const mockNeed = {
       id: 1,
-      FileData: 'base64filedata',
+      FileData: Buffer.from('filedata'),
       extension: '.txt',
       FileName: 'test_file.txt',
     };
@@ -51,7 +51,7 @@ describe('downloadFile', () => {
     );
     expect(mockResponse.send).toHaveBeenCalledTimes(1);
     expect(mockResponse.send).toHaveBeenCalledWith(
-      Buffer.from('base64filedata', 'base64')
+      Buffer.from('filedata')
     );
   });
 

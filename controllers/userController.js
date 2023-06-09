@@ -62,7 +62,7 @@ async function loginUser(req, res) {
 
         const token = generateToken(tokenPayload);
 
-        res.status(200).send({ token });
+        res.status(200).send({ token, userId: user.id });
     } catch (error) {
         res.status(500).send({ message:'Error occurred while logging in' });
     }
@@ -71,7 +71,6 @@ async function loginUser(req, res) {
 async function logoutUser(req, res) {
     try {
       const token = req.headers.authorization.split(' ')[1];
-  
       await Blacklist(token);
   
       res.send({ message: 'user is logged out' });

@@ -30,10 +30,11 @@ const search = async (req, res) => {
         SELECT COLUMN_NAME
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME = '${config.options.tableName}'
-          AND COLUMN_NAME IN ('ContactPerson', 'Title', 'NeedIs', 'CreatedAt')
+          AND COLUMN_NAME IN ('ContactPerson', 'Title', 'NeedIs', 'Keywords', 'Proposal', 'Solution', 'CreatedAt')
       `);
 
     const columns = columnsResult.recordset.map((columnRow) => {
+
       const columnName = columnRow.COLUMN_NAME;
       return `${config.options.tableName}.${columnName} LIKE @keyword`;
     });
@@ -41,7 +42,8 @@ const search = async (req, res) => {
 
     const fileURL = `CASE WHEN ${config.options.tableName}.FileData IS NULL THEN 'no file' ELSE CONCAT('${protocol}://${ipAddress}/api/v1/download/', ${config.options.tableName}.id) END AS fileURL`;
     const searchQuery = `
-      SELECT ${config.options.tableName}.ContactPerson, ${config.options.tableName}.Title, ${config.options.tableName}.NeedIs, ${config.options.tableName}.CreatedAt,
+      SELECT ${config.options.tableName}.ContactPerson, ${config.options.tableName}.Title, ${config.options.tableName}.NeedIs,${config.options.tableName}.Keywords,
+      ${config.options.tableName}.Proposal, ${config.options.tableName}.Solution, ${config.options.tableName}.CreatedAt,
         ${fileURL}
       FROM ${config.options.tableName}
       WHERE ${columns.join(' OR ')}

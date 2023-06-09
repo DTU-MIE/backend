@@ -7,7 +7,8 @@ async function createNeed(req, res) {
   const FileName = req.file ? req.file.originalname : null;
   const extension = FileName ? FileName.split('.').pop() : null;
   const createdAt = new Date();
-  const id = await model.insertNeed({NeedIs, Title, ContactPerson, Keywords, Proposal, Solution, FileData, FileName, extension, createdAt});
+  const UserId = req.user.id;
+  const id = await model.insertNeed({NeedIs, Title, ContactPerson, Keywords, Proposal, Solution, FileData, FileName, extension, createdAt, UserId});
   return res.json({ id });
 }
 
@@ -53,7 +54,7 @@ const downloadFile = async (req, res) => {
     return res.status(404).json({ message: 'File/Need not found' });
   }
 
-  const FileData = Buffer.from(need.FileData, 'base64');
+  const FileData = need.FileData;
   const contentType = mime.getType('.' + need.extension);
 
   const sanitizedFileName = need.FileName.replace(/[^\w\d.]/g, '_');
@@ -114,25 +115,46 @@ const updated = async (req, res) => {
   };
 
   try {
+    const UserId = req.user.id; 
+
+    const need = await model.getNeedById(id); 
+    if (!need) {
+      return res.status(404).json({ error: 'Need not found' });
+    }
+
+    if (need.UserId !== UserId) {
+      return res.status(403).json({ error: 'Unauthorized to update the need' });
+    }
+
     await model.updateNeed(id, updatedData);
     res.json({ message: 'Need updated successfully' });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'Failed to update the need' });
   }
 };
 
 async function deleted(req, res) {
   const { id } = req.params;
-
   try {
-    const isDeleted = await model.deleteNeed(id);
+    const UserId = req.user.id; 
+
+    const need = await model.getNeedById(id); 
+    if (!need) {
+      return res.status(404).json({ error: 'Need not found' });
+    }
+
+    if (need.UserId !== UserId) {
+      return res.status(403).json({ error: 'Unauthorized to delete the need' });
+    }
+
+    const isDeleted = await model.deleteNeed(id, UserId);
     if (isDeleted) {
       res.status(200).json({ success: true, message: 'Need deleted successfully' });
     } else {
       res.status(404).json({ success: false, message: 'Need not found' });
     }
   } catch (error) {
-    console.error('Error deleting need:', error);
     res.status(500).json({ success: false, message: 'Failed to delete need' });
   }
 }

@@ -17,6 +17,7 @@ describe('insertNeed', () => {
         FileName: null,
         extension: null,
         createdAt: new Date(),
+        UserId: 123
       };
   
       const mockInput = jest.fn().mockReturnThis();
@@ -41,7 +42,7 @@ describe('insertNeed', () => {
       expect(sql.ConnectionPool).toHaveBeenCalledTimes(1);
       expect(mockPool.connect).toHaveBeenCalledTimes(1);
       expect(mockPool.request).toHaveBeenCalledTimes(1);
-      expect(mockRequest.input).toHaveBeenCalledTimes(10);
+      expect(mockRequest.input).toHaveBeenCalledTimes(11);
       expect(mockRequest.input).toHaveBeenNthCalledWith(1, 'NeedIs', sql.NVarChar(4000), need.NeedIs);
       expect(mockRequest.input).toHaveBeenNthCalledWith(2, 'Title', sql.NVarChar(1000), need.Title);
       expect(mockRequest.input).toHaveBeenNthCalledWith(3, 'ContactPerson', sql.NVarChar(1000), need.ContactPerson);
@@ -52,6 +53,7 @@ describe('insertNeed', () => {
       expect(mockRequest.input).toHaveBeenNthCalledWith(8, 'FileName', sql.NVarChar(255), need.FileName);
       expect(mockRequest.input).toHaveBeenNthCalledWith(9, 'extension', sql.NVarChar(10), need.extension);
       expect(mockRequest.input).toHaveBeenNthCalledWith(10, 'createdAt', sql.DateTime, need.createdAt);
+      expect(mockRequest.input).toHaveBeenNthCalledWith(11, 'UserId', sql.INT, need.UserId);
       expect(mockRequest.query).toHaveBeenCalledTimes(1);
       expect(mockPool.close).toHaveBeenCalledTimes(1);
       expect(result).toBe(1);
@@ -75,6 +77,9 @@ describe('insertNeed', () => {
           buffer: Buffer.from('Test File Content'),
           originalname: 'test.jpg',
         },
+        user: {
+          id: 123,
+        },
       };
   
       const mockResponse = {
@@ -92,6 +97,7 @@ describe('insertNeed', () => {
         FileName: 'test.jpg',
         extension: 'jpg',
         createdAt: expect.any(Date),
+        UserId: 123
       };
   
       const mockInsertNeed = jest.spyOn(model, 'insertNeed').mockResolvedValueOnce(1);
@@ -113,6 +119,9 @@ describe('insertNeed', () => {
           Proposal: 'Test Proposal',
           Solution: 'Test Solution',
         },
+        user: {
+          id: 123,
+        },
       };
   
       const mockResponse = {
@@ -130,6 +139,7 @@ describe('insertNeed', () => {
         FileName: null,
         extension: null,
         createdAt: expect.any(Date),
+        UserId: 123 
       };
   
       const mockInsertNeed = jest.spyOn(model, 'insertNeed').mockResolvedValueOnce(2);
