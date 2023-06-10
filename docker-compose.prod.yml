@@ -22,6 +22,7 @@ services:
       - DATA_TABLE_NAME=${DATA_TABLE_NAME}
       - API_KEY=${API_KEY}
       - BASE_KEY=${BASE_KEY}
+      - PROD_AUTH_KEY=${PROD_AUTH_KEY}
     command: node index.js
     depends_on:
       - sql
