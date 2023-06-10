@@ -64,6 +64,7 @@ async function loginUser(req, res) {
 
         res.status(200).send({ token, userId: user.id });
     } catch (error) {
+      console.log(error)
         res.status(500).send({ message:'Error occurred while logging in' });
     }
 }

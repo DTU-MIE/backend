@@ -11,7 +11,7 @@ services:
     image: amandajkofoed/innocloud3
     ports:
       - "3000:3000"
-  node-app: #we need bound and to not have node-modules folder deleted
+  node-app: #bound and to not have node-modules folder deleted
     build:
       context: . #location of the docker file 
       args: 
@@ -32,6 +32,9 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - AUTH_KEY=${AUTH_KEY}
       - DATA_TABLE_NAME=${DATA_TABLE_NAME}
+      - API_KEY=${API_KEY}
+      - BASE_KEY=${BASE_KEY}
+
     command: npm run dev #you can also run node index.js
   sql:
     container_name: sql

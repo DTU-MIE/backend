@@ -20,6 +20,8 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - AUTH_KEY=${AUTH_KEY}
       - DATA_TABLE_NAME=${DATA_TABLE_NAME}
+      - API_KEY=${API_KEY}
+      - BASE_KEY=${BASE_KEY}
     command: node index.js
     depends_on:
       - sql

@@ -6,7 +6,7 @@ const verifyTokenMock = jest.fn();
 jwt.verify.mockImplementation(verifyTokenMock);
 
 jest.mock('../config/config', () => ({
-  AUTH_KEY: 'mockAuthKey',
+  AUTH_KEY: 'mockAuthKey'
 }));
 
 describe('authorize', () => {

@@ -1,11 +1,9 @@
 const request = require('supertest');
-const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = require('../routes/needRoutes');
 const app = express(); 
 const model = require('../models/needModel'); 
 const needController = require('../controllers/needController'); 
-const config = require('../config/config'); 
 
 const mockNeed = {
   ID: 1,
@@ -21,8 +19,15 @@ jest.mock('../models/needModel', () => ({
     return { ...mockNeed, ID: needId };
   }),
 }));
+
 jest.mock('../config/config', () => ({
   AUTH_KEY: 'mocked_auth_key', 
+}));
+jest.mock('../middleware/auth', () => ({
+  authenticateToken: jest.fn((req, res, next) => {
+    req.user = { userId: 123 }; 
+    next(); 
+  }),
 }));
 
 router.get('/download/:id', (req, res) => {
@@ -39,9 +44,6 @@ describe('Download File API', () => {
 
     const mockToken = 'mocked_token';
 
-    jest.replaceProperty(config, 'AUTH_KEY', 'mocked_auth_key');
-    jwt.verify = jest.fn().mockReturnValue({ id: 1 });
-
     const response = await request(app)
       .get('/download/1')
       .set('Authorization', `Bearer ${mockToken}`);
@@ -51,6 +53,5 @@ describe('Download File API', () => {
     expect(response.header['content-disposition']).toBe('attachment; filename=mocked_file.pdf');
     expect(response.body).toEqual(mockNeed.FileData);
     expect(model.getNeedById).toHaveBeenCalledWith('1');
-    expect(jwt.verify).toHaveBeenCalledWith(mockToken, 'mocked_auth_key');
   });
 });

@@ -43,6 +43,6 @@ describe('Login API', () => {
   
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('token');
-    expect(response.body.token).toBe('mockedToken'); 
+    expect(response.body.token).toBe('mockedToken', 123); 
     });
 });

@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: "1.0.0"
   title: "API Documentation of MIE"
-basePath: "/api/v1/api-docs"
+basePath: "/"
 schemes:
   - "http"
   - "https"

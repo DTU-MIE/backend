@@ -4,17 +4,17 @@ const { dbConfig, API_KEY, BASE_KEY } = require("../config/config");
 
 //Airtable credentials and base information
 const base = new Airtable({ apiKey: API_KEY }).base(BASE_KEY);
-const table = base('Need');
+const table = base('Mie');
 
 const pool = new sql.ConnectionPool(dbConfig);
 
-//transfer data from Airtable to azure database
+//transfer data from Airtable to server database
 const intergrateNeed = async (req, res) => {
   try {
     // Get records from Airtable
     const records = await table.select().all();
 
-    // Loop for each records and insert them into azure database
+    // Loop for each records and insert them into server database
     records.forEach(async (record) => {
     await pool.connect();
     const request = pool.request();

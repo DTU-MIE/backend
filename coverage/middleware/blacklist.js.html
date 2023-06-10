@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for routes/needRoutes.js</title>
+    <title>Code coverage report for middleware/blacklist.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">routes</a> needRoutes.js</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">middleware</a> blacklist.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>5/10</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>5/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -80,48 +80,48 @@
 <a name='L15'></a><a href='#L15'>15</a>
 <a name='L16'></a><a href='#L16'>16</a>
 <a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<a name='L18'></a><a href='#L18'>18</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const express = require('express');
-const needController = require('../controllers/needController');
-const { authenticateToken} = require('../middleware/auth');
-const upload = require('../middleware/fileUpload');
-const router = express.Router();
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const { dbConfig } = require("../config/config");
+const sql = require("mssql");
 &nbsp;
+  async function isTokenBlacklisted(token) {
+    const connection = await sql.connect(dbConfig);
+    const request = connection.request();
+<span class="cstat-no" title="statement not covered" >    request.input('token', sql.NVarChar, token);</span>
+    const result = <span class="cstat-no" title="statement not covered" >await request.query('SELECT COUNT(*) as count FROM blacklist WHERE token = @token');</span>
+<span class="cstat-no" title="statement not covered" >    await connection.close();</span>
+  
+    const count = <span class="cstat-no" title="statement not covered" >result.recordset[0].count;</span>
+<span class="cstat-no" title="statement not covered" >    return count &gt; 0;</span>
+  }
+  
 &nbsp;
-router.post('/needs', authenticateToken, upload.single('FileData'), needController.createNeed);
-router.get('/allneeds', authenticateToken, needController.allNeeds);
-router.get('/needs/:id', authenticateToken, needController.getNeed);
-router.get('/download/:id', authenticateToken, needController.downloadFile);
-router.put('/update/needs/:id', authenticateToken, upload.single('FileData'), needController.updated);
-router.delete('/delete/:id', authenticateToken, needController.deleted);
-&nbsp;
-&nbsp;
-&nbsp;
-module.exports = router;
-&nbsp;</pre></td></tr></table></pre>
+  module.exports = {
+    isTokenBlacklisted
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-06-10T22:59:43.856Z
+                at 2023-06-10T13:00:20.812Z
             </div>
         <script src="../prettify.js"></script>
         <script>

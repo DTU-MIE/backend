@@ -1,5 +1,5 @@
 const sql = require("mssql");
-const { config } = require("../config/config");
+const { dbConfig } = require("../config/config");
 
 const search = async (req, res) => {
   const keyword = req.query.keyword;
@@ -11,7 +11,7 @@ const search = async (req, res) => {
   const ipAddress = isLocal ? 'localhost:3002' : 'www.innocloud.dk';
   
   try {
-    const pool = await sql.connect(config);
+    const pool = await sql.connect(dbConfig);
 
     const tableExists = await pool
     .request()
@@ -29,23 +29,23 @@ const search = async (req, res) => {
       .query(`
         SELECT COLUMN_NAME
         FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = '${config.options.tableName}'
+        WHERE TABLE_NAME = '${dbConfig.options.tableName}'
           AND COLUMN_NAME IN ('ContactPerson', 'Title', 'NeedIs', 'Keywords', 'Proposal', 'Solution', 'CreatedAt')
       `);
 
     const columns = columnsResult.recordset.map((columnRow) => {
 
       const columnName = columnRow.COLUMN_NAME;
-      return `${config.options.tableName}.${columnName} LIKE @keyword`;
+      return `${dbConfig.options.tableName}.${columnName} LIKE @keyword`;
     });
 
 
-    const fileURL = `CASE WHEN ${config.options.tableName}.FileData IS NULL THEN 'no file' ELSE CONCAT('${protocol}://${ipAddress}/api/v1/download/', ${config.options.tableName}.id) END AS fileURL`;
+    const fileURL = `CASE WHEN ${dbConfig.options.tableName}.FileData IS NULL THEN 'no file' ELSE CONCAT('${protocol}://${ipAddress}/api/v1/download/', ${dbConfig.options.tableName}.id) END AS fileURL`;
     const searchQuery = `
-      SELECT ${config.options.tableName}.ContactPerson, ${config.options.tableName}.Title, ${config.options.tableName}.NeedIs,${config.options.tableName}.Keywords,
-      ${config.options.tableName}.Proposal, ${config.options.tableName}.Solution, ${config.options.tableName}.CreatedAt,
+      SELECT ${dbConfig.options.tableName}.ContactPerson, ${dbConfig.options.tableName}.Title, ${dbConfig.options.tableName}.NeedIs,${dbConfig.options.tableName}.Keywords,
+      ${dbConfig.options.tableName}.Proposal, ${dbConfig.options.tableName}.Solution, ${dbConfig.options.tableName}.CreatedAt,
         ${fileURL}
-      FROM ${config.options.tableName}
+      FROM ${dbConfig.options.tableName}
       WHERE ${columns.join(' OR ')}
       ORDER BY CreatedAt DESC 
       OFFSET ${(pageNumber - 1) * resultsPerPage} ROWS

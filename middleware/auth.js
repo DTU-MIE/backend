@@ -1,24 +1,42 @@
 const jwt = require('jsonwebtoken');
 const {
-    AUTH_KEY
+  PROD_AUTH_KEY, AUTH_KEY, NODE_ENV
   } = require("../config/config");
 
+
 function generateToken(payload) {
-    return jwt.sign(payload, AUTH_KEY, { expiresIn: '1h' });
+    let authKey;
+  
+    if (process.env.NODE_ENV === 'production') {
+      authKey = PROD_AUTH_KEY;
+    } else {
+      authKey = AUTH_KEY;
+    }
+  
+    return jwt.sign(payload, authKey, { expiresIn: '1h' });
 }
+  
 
 function verifyToken(token) {
-    return jwt.verify(token, AUTH_KEY);
+  let authKey;
+
+  if (process.env.NODE_ENV === 'production') {
+    authKey = PROD_AUTH_KEY;
+  } else {
+    authKey = AUTH_KEY;
+  }
+
+  return jwt.verify(token, authKey);
 }
 
-function authenticateToken(req, res, next) {
+async function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
   
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
-  
+
     try {
       req.user = verifyToken(token);
       next();
