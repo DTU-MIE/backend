@@ -16,7 +16,7 @@ paths:
       parameters:
         - name: Authorization
           in: header
-          required: true
+          required: false
           type: string
           description: 'Authorization token (Bearer token)'
         - name: id
