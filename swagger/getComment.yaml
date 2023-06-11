@@ -17,7 +17,7 @@ paths:
         - name: Authorization
           in: header
           description: Authorization token (Bearer token)
-          required: false
+          required: true
           type: string
         - name: needID
           in: path
