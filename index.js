@@ -25,7 +25,7 @@ const getCommentSpec = YAML.load('./swagger/getComment.yaml')
 const _ = require('lodash')
 const commentRoutes = require('./routes/commentRoutes')
 
-const apiSpec = _.merge({}, UserRegSpec, loginSpec, profileSpec, logoutSpec, authorizedSpec, 
+const apiSpec = _.merge({}, UserRegSpec, loginSpec, profileSpec, logoutSpec, authorizedSpec,
   createNeedSpec, allNeedsSpec, getNeedSpec, downloadFileSpec, updateNeedSpec, deleteNeedSpec,
   searchSpec, addCommentSpec, getCommentSpec)
 
@@ -35,17 +35,15 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json({ limit: '500mb' }))
 app.enable("trust proxy")
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   next()
 }, cors({
-  origin: ['http://localhost:3000'],
+  origin: ['http://localhost:3000', '*'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
 }))
 
-  
+
+
 
 
 app.use(express.json())
