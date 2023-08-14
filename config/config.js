@@ -12,7 +12,6 @@ const MYSQL_HOST = process.env.MYSQL_HOST || "localhost";
 const MYSQL_USER = process.env.MYSQL_USER;
 const MYSQL_SA_PASSWORD = process.env.MYSQL_SA_PASSWORD;
 const MYSQL_CONNECTIONSTRING = process.env.MYSQL_CONNECTIONSTRING;
-console.log("ConnectionString: " + MYSQL_CONNECTIONSTRING);
 const SECRET_KEY = process.env.SECRET_KEY;
 const AUTH_KEY = process.env.AUTH_KEY;
 const PROD_AUTH_KEY = process.env.PROD_AUTH_KEY;
