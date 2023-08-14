@@ -1,4 +1,4 @@
-FROM node:15
+FROM node:20-alpine
 WORKDIR /app
 COPY package.json .
 
@@ -9,6 +9,6 @@ RUN if [ "$NODE_ENV" = "development" ]; \
         fi
 
 COPY . ./
-ENV PORT 3002
+ENV PORT 4000
 EXPOSE $PORT
 CMD ["node", "index.js"]
