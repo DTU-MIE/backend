@@ -1,6 +1,6 @@
-const sql = require("mssql");
+const mysql = require('mysql2');
 const { dbConfig } = require("../config/config");
-
+const {col} = require("sequelize");
 const search = async (req, res) => {
   const keyword = req.query.keyword;
   const pageNumber = req.query.pageNumber || 1;
@@ -9,36 +9,46 @@ const search = async (req, res) => {
   const isLocal = req.headers.host.startsWith('localhost');
   const protocol = isLocal ? 'http' : 'https';
   const ipAddress = isLocal ? 'localhost:3002' : 'www.innocloud.dk';
-  
+  let connection
   try {
-    const pool = await sql.connect(dbConfig);
+    connection = mysql.createConnection(dbConfig.connectionString);
+    connection.connect();
 
-    const tableExists = await pool
-    .request()
-    .query(`
-      SELECT 1
-      FROM sys.tables
-      WHERE name = 'NEED'
-    `);
-    if (tableExists.recordset.length === 0) {
+    const tableExistsResult = await new Promise((resolve, reject) => {
+      connection.query(
+          `SELECT 1 FROM information_schema.tables WHERE table_name = 'NEED' LIMIT 1`,
+          (error, results) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(results);
+            }
+          }
+      );
+    });
+
+    if (tableExistsResult.length === 0) {
       throw new Error(`Table "NEED" does not exist in the database`);
     }
 
-    const columnsResult = await pool
-      .request()
-      .query(`
-        SELECT COLUMN_NAME
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME = '${dbConfig.options.tableName}'
-          AND COLUMN_NAME IN ('ContactPerson', 'Title', 'NeedIs', 'Keywords', 'Proposal', 'Solution', 'CreatedAt')
-      `);
-
-    const columns = columnsResult.recordset.map((columnRow) => {
-
-      const columnName = columnRow.COLUMN_NAME;
-      return `${dbConfig.options.tableName}.${columnName} LIKE @keyword`;
+    const columnsResult = await new Promise((resolve, reject) => {
+      connection.query(
+          `SELECT COLUMN_NAME FROM information_schema.columns WHERE table_name = ? AND column_name IN ('ContactPerson', 'Title', 'NeedIs', 'Keywords', 'Proposal', 'Solution', 'CreatedAt')`,
+          [dbConfig.options.tableName],
+          (error, results) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(results);
+            }
+          }
+      );
     });
 
+    const columns = columnsResult.map((columnRow) => {
+      const columnName = columnRow.COLUMN_NAME;
+      return `${dbConfig.options.tableName}.${columnName} LIKE ?`;
+    });
 
     const fileURL = `CASE WHEN ${dbConfig.options.tableName}.FileData IS NULL THEN 'no file' ELSE CONCAT('${protocol}://${ipAddress}/api/v1/download/', ${dbConfig.options.tableName}.id) END AS fileURL`;
     const searchQuery = `
@@ -48,22 +58,28 @@ const search = async (req, res) => {
       FROM ${dbConfig.options.tableName}
       WHERE ${columns.join(' OR ')}
       ORDER BY CreatedAt DESC 
-      OFFSET ${(pageNumber - 1) * resultsPerPage} ROWS
-      FETCH NEXT ${resultsPerPage} ROWS ONLY
+      LIMIT ${(pageNumber - 1) * resultsPerPage}, ${resultsPerPage}
     `;
+    let params = []
+    for(let i = 0; i< columns.length;i++) {
+      params.push("%"+keyword+"%")
+    }
+    const searchResult = await new Promise((resolve, reject) => {
+      connection.query(searchQuery, params, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
 
-    const request = new sql.Request(pool);
-    request.input('keyword', sql.NVarChar, `%${keyword}%`);
+    res.status(200).send(searchResult);
 
-    const searchResult = await request.query(searchQuery);
-    res.status(200).send(searchResult.recordset);
-
-    
   } catch (error) {
     res.status(500).send({ error: 'search, Internal Server Error' });
   }
 };
-
 
 module.exports = {
   search

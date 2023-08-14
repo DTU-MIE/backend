@@ -85,9 +85,36 @@ async function getUserByEmailAndPassword(email, password) {
     }
 }
 
+async function getUsers(ids){
+    let connection
+    try {
+
+        const connection = mysql.createConnection(dbConfig.connectionString);
+        connection.connect();
+
+        const query = "SELECT name, email FROM USERS WHERE id IN ?"
+
+        return await new Promise((resolve, reject) => {
+            connection.query(query, [ids], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        })
+    } catch (e) {
+        console.log("Error: ", e)
+        throw e
+    } finally {
+        if(connection)
+            connection.end()
+    }
+}
+
 async function Blacklist(token) {
     try {
-        const connection = mysql.createConnection(dbconfig.connectionstring);
+        const connection = mysql.createConnection(dbConfig.connectionString);
         connection.connect();
 
         const insertQuery = 'INSERT INTO blacklist (token) VALUES (?)';
@@ -102,5 +129,6 @@ async function Blacklist(token) {
 module.exports = {
     createUser,
     getUserByEmailAndPassword,
-    Blacklist
+    Blacklist,
+    getUsers
 };
