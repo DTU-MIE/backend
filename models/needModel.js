@@ -44,8 +44,9 @@ async function insertNeed(need) {
 }
 
 async function getNeedById(id) {
+    let connection
     try {
-        const connection = mysql.createConnection(dbConfig.connectionString);
+        connection = mysql.createConnection(dbConfig.connectionString);
         connection.connect();
 
         const query = `
@@ -65,11 +66,14 @@ async function getNeedById(id) {
             });
         });
 
-        connection.end();
         return result[0];
     } catch (err) {
         console.error('Error getting need by ID:', err);
         throw err;
+    } finally {
+        if(connection) {
+            connection.end();
+        }
     }
 }
 
@@ -177,11 +181,39 @@ async function deleteNeed(id, UserId) {
     }
 }
 
+const tagsList = [
+    {
+        category: "sygdom",
+        value: "fraktur"
+    },
+    {
+        category: "psykiatri",
+        value: "magtanvendelse"
+    },
+    {
+        category: "psykiatri",
+        value: "skizofreni"
+    },
+    {
+        category: "sygdom",
+        value: "kredsløb"
+    },
+    {
+        category: "administration",
+        value: "journalisering"
+    }
+]
+
+async function getTags() {
+    return tagsList
+}
+
 
 module.exports = {
     insertNeed,
     getNeedById,
     getAllNeeds,
     updateNeed,
-    deleteNeed
+    deleteNeed,
+    getTags
 };

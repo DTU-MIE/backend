@@ -20,15 +20,17 @@ const insertComment = async (needID, comment, kind) => {
 
         const values = [needID, comment, kind];
 
-        connection.query(query, values, (error, results) => {
+        await connection.query(query, values, (error, results) => {
             if (error) {
                 throw error;
             }
             console.log('Comment added successfully!');
-            connection.end();
         });
     } catch (err) {
         throw err;
+    } finally {
+
+        connection.end();
     }
 };
 
@@ -37,8 +39,9 @@ const insertComment = async (needID, comment, kind) => {
 
 
 const getCommentsForNeed = async (needID) => {
+    let connection;
   try {
-      const connection = mysql.createConnection(dbConfig.connectionString);
+      connection = mysql.createConnection(dbConfig.connectionString);
       connection.connect();
 
       const query = `
@@ -61,6 +64,9 @@ const getCommentsForNeed = async (needID) => {
       return result;
   } catch (err) {
       console.log(err);
+  } finally {
+      if(connection)
+          connection.end()
   }
 };
 
