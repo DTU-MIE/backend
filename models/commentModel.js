@@ -2,6 +2,7 @@ const mysql = require('mysql2');
 const { dbConfig } = require("../config/config");
 
 const insertComment = async (needID, comment, kind) => {
+    let connection;
     try {
         if (!comment) {
             throw new Error('Comment is empty!');
@@ -10,7 +11,7 @@ const insertComment = async (needID, comment, kind) => {
             throw new Error('Invalid kind value!');
         }
 
-        const connection = mysql.createConnection(dbConfig.connectionString);
+        connection = mysql.createConnection(dbConfig.connectionString);
         connection.connect();
 
         const query = `
@@ -19,18 +20,24 @@ const insertComment = async (needID, comment, kind) => {
         `;
 
         const values = [needID, comment, kind];
+        await new Promise((resolve, reject) => {
+            connection.query(query, values, (error, results) => {
+                if (error) {
+                    reject(error)
+                } else {
+                    resolve()
+                    console.log('Comment added successfully!');
+                }
 
-        await connection.query(query, values, (error, results) => {
-            if (error) {
-                throw error;
-            }
-            console.log('Comment added successfully!');
+            });
         });
+
     } catch (err) {
         throw err;
     } finally {
-
-        connection.end();
+        if(connection) {
+            connection.end();
+        }
     }
 };
 
@@ -60,7 +67,6 @@ const getCommentsForNeed = async (needID) => {
           });
       });
 
-      connection.end();
       return result;
   } catch (err) {
       console.log(err);
