@@ -1,55 +1,68 @@
-const sql = require('mssql');
-
+const mysql = require('mysql2');
 const { dbConfig } = require("../config/config");
 
 const insertComment = async (needID, comment, kind) => {
     try {
-      if (!comment) {
-        throw new Error('Comment is empty!');
-      }
-      if (kind !== 'Proposal' && kind !== 'Comment') {
-        throw new Error('Invalid kind value!');
-      }
-  
-      const pool = new sql.ConnectionPool(dbConfig);
-      await pool.connect();
-      const request = pool.request();
-      request.input('needID', sql.Int, needID);
-      request.input('comment', sql.NVarChar(4000), comment);
-      request.input('kind', sql.NVarChar(255), kind);
-  
-      await request.query(`
-        INSERT INTO comments (needID, comment, kind, created_at)
-        VALUES (@needID, @comment, @kind, GETDATE())
-      `); 
-      console.log('Comment added successfully!');
+        if (!comment) {
+            throw new Error('Comment is empty!');
+        }
+        if (kind !== 'Proposal' && kind !== 'Comment') {
+            throw new Error('Invalid kind value!');
+        }
+
+        const connection = mysql.createConnection(dbConfig.connectionString);
+        connection.connect();
+
+        const query = `
+            INSERT INTO comments (needID, comment, kind, created_at)
+            VALUES (?, ?, ?, NOW())
+        `;
+
+        const values = [needID, comment, kind];
+
+        connection.query(query, values, (error, results) => {
+            if (error) {
+                throw error;
+            }
+            console.log('Comment added successfully!');
+            connection.end();
+        });
     } catch (err) {
-      throw err;
+        throw err;
     }
 };
-  
+
+// Call the function with appropriate parameters
+//insertComment(123, 'This is a test comment', 'Proposal');
+
 
 const getCommentsForNeed = async (needID) => {
   try {
-    const pool = new sql.ConnectionPool(dbConfig);
-    await pool.connect();
-    const request = pool.request();
-    request.input('needID', sql.Int, needID);
+      const connection = mysql.createConnection(dbConfig.connectionString);
+      connection.connect();
 
-    const result = await request.query(`
-      SELECT *
-      FROM comments
-      WHERE needID = @needID
-    `);
+      const query = `
+          SELECT *
+          FROM comments
+          WHERE needID = ?
+      `;
 
-    return result.recordset;
+      const result = await new Promise((resolve, reject) => {
+          connection.query(query, [needID], (error, results) => {
+              if (error) {
+                  reject(error);
+              } else {
+                  resolve(results);
+              }
+          });
+      });
+
+      connection.end();
+      return result;
   } catch (err) {
-    console.log(err);
+      console.log(err);
   }
 };
-
-
-
 
 module.exports = {
   insertComment,
