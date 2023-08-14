@@ -1,11 +1,18 @@
 const dotenv = require('dotenv');
 
 //configraration with env. 
-dotenv.config({ path: '../.env' });
+//configuration with env. 
+try {
+    dotenv.config();
+  } catch (error) {
+    console.error('Error loading .env file:', error);
+  }
 
-const MSSQL_HOST = process.env.MSSQL_HOST || "localhost";
-const MSSQL_USER = process.env.MSSQL_USER;
-const MSSQL_SA_PASSWORD = process.env.MSSQL_SA_PASSWORD;
+const MYSQL_HOST = process.env.MYSQL_HOST || "localhost";
+const MYSQL_USER = process.env.MYSQL_USER;
+const MYSQL_SA_PASSWORD = process.env.MYSQL_SA_PASSWORD;
+const MYSQL_CONNECTIONSTRING = process.env.MYSQL_CONNECTIONSTRING;
+console.log("ConnectionString: " + MYSQL_CONNECTIONSTRING);
 const SECRET_KEY = process.env.SECRET_KEY;
 const AUTH_KEY = process.env.AUTH_KEY;
 const PROD_AUTH_KEY = process.env.PROD_AUTH_KEY;
@@ -16,12 +23,13 @@ const API_KEY= process.env.API_KEY;
 const BASE_KEY= process.env.BASE_KEY;
 
 
-const dbConfig = {  
+const dbConfig = {
+    connectionString: MYSQL_CONNECTIONSTRING,
     database: DATABASE_NAME,
     server: SERVER_NAME,
-    host: MSSQL_HOST,
-    user: MSSQL_USER, 
-    password: MSSQL_SA_PASSWORD, 
+    host: MYSQL_HOST,
+    user: MYSQL_USER, 
+    password: MYSQL_SA_PASSWORD, 
     enableArithAbort: true,
     Encrypt:true,
     trustServerCertificate: true,
@@ -33,8 +41,8 @@ const dbConfig = {
 
 module.exports = {
     SECRET_KEY,
-    MSSQL_USER,
-    MSSQL_SA_PASSWORD,
+    MYSQL_USER,
+    MYSQL_SA_PASSWORD,
     AUTH_KEY,
     dbConfig,
     API_KEY,
