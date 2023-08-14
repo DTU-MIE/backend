@@ -56,7 +56,7 @@ async function createUser(userDetails) {
 
 async function getUserByEmailAndPassword(email, password) {
     try {
-        const connection = mysql.createConnection(dbconfig.connectionstring);
+        const connection = mysql.createConnection(dbConfig.connectionString);
         connection.connect();
 
         const selectQuery = `

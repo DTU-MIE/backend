@@ -33,7 +33,7 @@ const insertComment = async (needID, comment, kind) => {
 };
 
 // Call the function with appropriate parameters
-insertComment(123, 'This is a test comment', 'Proposal');
+//insertComment(123, 'This is a test comment', 'Proposal');
 
 
 const getCommentsForNeed = async (needID) => {
