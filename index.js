@@ -37,7 +37,7 @@ app.enable("trust proxy")
 app.use((req, res, next) => {
   next()
 }, cors({
-  origin: ['http://localhost:3000', '*'],
+  origin: ['http://localhost:3000', 'https://mie.4a4b.dk','*'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
 }))
