@@ -6,16 +6,16 @@ const {
 
 function generateToken(payload) {
     let authKey;
-  
+
     if (process.env.NODE_ENV === 'production') {
       authKey = PROD_AUTH_KEY;
     } else {
       authKey = AUTH_KEY;
     }
-  
-    return jwt.sign(payload, authKey, { expiresIn: '1h' });
+
+    return jwt.sign(payload, authKey, { expiresIn: '12h' });
 }
-  
+
 
 function verifyToken(token) {
   let authKey;
@@ -32,7 +32,7 @@ function verifyToken(token) {
 async function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-  
+
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
@@ -44,7 +44,7 @@ async function authenticateToken(req, res, next) {
       return res.status(403).json({ message: 'Invalid token' });
     }
   }
-  
+
 //authorized user only access certain endpoint, but for now there is no privilages assigneed to this
 async function authorize(req, res, next) {
   const authHeader = req.headers['authorization'];

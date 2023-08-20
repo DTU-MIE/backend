@@ -5,7 +5,8 @@ const addComment = async (req, res) => {
   try {
     const { needID } = req.params;
     const { comment, kind } = req.body;
-    await insertComment(needID, comment, kind);
+
+    await insertComment(needID, comment, kind, req.user.id);
     res.send('Comment added successfully!');
   } catch (error) {
     res.status(500).send('Internal server error');

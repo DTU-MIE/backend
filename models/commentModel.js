@@ -1,7 +1,9 @@
 const mysql = require('mysql2');
 const { dbConfig } = require("../config/config");
+const {getUsers} = require("./userModel");
 
-const insertComment = async (needID, comment, kind) => {
+const insertComment = async (needID, comment, kind, creator) => {
+    let connection;
     try {
         if (!comment) {
             throw new Error('Comment is empty!');
@@ -10,25 +12,33 @@ const insertComment = async (needID, comment, kind) => {
             throw new Error('Invalid kind value!');
         }
 
-        const connection = mysql.createConnection(dbConfig.connectionString);
+        connection = mysql.createConnection(dbConfig.connectionString);
         connection.connect();
 
         const query = `
-            INSERT INTO comments (needID, comment, kind, created_at)
-            VALUES (?, ?, ?, NOW())
+            INSERT INTO comments (needID, comment, kind, created_at, creator)
+            VALUES (?, ?, ?, NOW(), ?)
         `;
 
-        const values = [needID, comment, kind];
+        const values = [needID, comment, kind, creator];
+        await new Promise((resolve, reject) => {
+            connection.query(query, values, (error, results) => {
+                if (error) {
+                    reject(error)
+                } else {
+                    resolve()
+                    console.log('Comment added successfully!');
+                }
 
-        connection.query(query, values, (error, results) => {
-            if (error) {
-                throw error;
-            }
-            console.log('Comment added successfully!');
-            connection.end();
+            });
         });
+
     } catch (err) {
         throw err;
+    } finally {
+        if(connection) {
+            connection.end();
+        }
     }
 };
 
@@ -37,13 +47,13 @@ const insertComment = async (needID, comment, kind) => {
 
 
 const getCommentsForNeed = async (needID) => {
+    let connection;
   try {
-      const connection = mysql.createConnection(dbConfig.connectionString);
+      connection = mysql.createConnection(dbConfig.connectionString);
       connection.connect();
 
       const query = `
-          SELECT *
-          FROM comments
+          select comment_id, needID, comment, kind, created_at, creator, name as creatorName, email from comments left join USERS on comments.creator = USERS.id
           WHERE needID = ?
       `;
 
@@ -56,11 +66,12 @@ const getCommentsForNeed = async (needID) => {
               }
           });
       });
-
-      connection.end();
-      return result;
+      return result
   } catch (err) {
       console.log(err);
+  } finally {
+      if(connection)
+          connection.end()
   }
 };
 

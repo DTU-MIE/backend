@@ -13,8 +13,9 @@ const saltRounds = 10;
 const { dbConfig } = require("../config/config");
 
 async function createUser(userDetails) {
+    let connection
     try {
-        const connection = mysql.createConnection(dbConfig.connectionString);
+        connection = mysql.createConnection(dbConfig.connectionString);
         connection.connect();
 
         const emailExistsQuery = 'SELECT COUNT(*) as count FROM USERS WHERE email = ?';
@@ -25,7 +26,7 @@ async function createUser(userDetails) {
         }
 
         const emailDomain = userDetails.email.split('@')[1];
-        if (emailDomain !== 'regionh.dk' && emailDomain !== 'dtu.dk') {
+        if (emailDomain !== 'regionh.dk' && emailDomain !== 'dtu.dk' && !emailDomain.endsWith("kp.dk")) {
             throw new Error('Invalid email domain');
         }
 
@@ -46,17 +47,21 @@ async function createUser(userDetails) {
         ];
 
         const [insertResult] = await connection.promise().execute(insertQuery, insertValues);
-        connection.end();
         return insertResult.insertId;
     } catch (error) {
         console.log('Error:', error);
         throw error;
+    } finally {
+        if(connection) {
+            connection.end();
+        }
     }
 }
 
 async function getUserByEmailAndPassword(email, password) {
+    let connection
     try {
-        const connection = mysql.createConnection(dbConfig.connectionString);
+        connection = mysql.createConnection(dbConfig.connectionString);
         connection.connect();
 
         const selectQuery = `
@@ -82,25 +87,62 @@ async function getUserByEmailAndPassword(email, password) {
     } catch (error) {
         console.log('Error:', error);
         throw error;
+    } finally {
+        if(connection) {
+            connection.end();
+        }
+    }
+}
+
+async function getUsers(ids){
+    let connection
+    try {
+
+        const connection = mysql.createConnection(dbConfig.connectionString);
+        connection.connect();
+
+        const query = "SELECT name, email FROM USERS WHERE id IN ?"
+
+        return await new Promise((resolve, reject) => {
+            connection.query(query, [ids], (error, results) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(results);
+                }
+            });
+        })
+    } catch (e) {
+        console.log("Error: ", e)
+        throw e
+    } finally {
+        if(connection)
+            connection.end()
     }
 }
 
 async function Blacklist(token) {
+    let connection
     try {
-        const connection = mysql.createConnection(dbconfig.connectionstring);
+        connection = mysql.createConnection(dbConfig.connectionString);
         connection.connect();
 
         const insertQuery = 'INSERT INTO blacklist (token) VALUES (?)';
         const [insertResult] = await connection.promise().execute(insertQuery, [token]);
-        connection.end();
+
     } catch (error) {
         console.log('Error:', error);
         throw error;
+    } finally {
+        if(connection) {
+            connection.end();
+        }
     }
 }
 
 module.exports = {
     createUser,
     getUserByEmailAndPassword,
-    Blacklist
+    Blacklist,
+    getUsers
 };
