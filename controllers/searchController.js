@@ -33,7 +33,7 @@ const search = async (req, res) => {
 
     const columnsResult = await new Promise((resolve, reject) => {
       connection.query(
-          `SELECT COLUMN_NAME FROM information_schema.columns WHERE table_name = ? AND column_name IN ('ContactPerson', 'Title', 'NeedIs', 'Keywords', 'Proposal', 'Solution', 'CreatedAt')`,
+          `SELECT COLUMN_NAME FROM information_schema.columns WHERE table_name = ? AND column_name IN ('id','ContactPerson', 'Title', 'NeedIs', 'Proposal', 'Solution', 'CreatedAt')`,
           [dbConfig.options.tableName],
           (error, results) => {
             if (error) {
@@ -52,7 +52,7 @@ const search = async (req, res) => {
 
     const fileURL = `CASE WHEN ${dbConfig.options.tableName}.FileData IS NULL THEN 'no file' ELSE CONCAT('${protocol}://${ipAddress}/api/v1/download/', ${dbConfig.options.tableName}.id) END AS fileURL`;
     const searchQuery = `
-      SELECT ${dbConfig.options.tableName}.ContactPerson, ${dbConfig.options.tableName}.Title, ${dbConfig.options.tableName}.NeedIs,${dbConfig.options.tableName}.Keywords,
+      SELECT ${dbConfig.options.tableName}.id, ${dbConfig.options.tableName}.ContactPerson, ${dbConfig.options.tableName}.Title, ${dbConfig.options.tableName}.NeedIs,
       ${dbConfig.options.tableName}.Proposal, ${dbConfig.options.tableName}.Solution, ${dbConfig.options.tableName}.CreatedAt,
         ${fileURL}
       FROM ${dbConfig.options.tableName}
@@ -73,11 +73,32 @@ const search = async (req, res) => {
         }
       });
     });
+    let ids = searchResult.map(e => e.id)
 
-    res.status(200).send(searchResult);
+    const tagsQuery = "SELECT * FROM tags WHERE id IN (?)"
+    const tags  = await new Promise((resolve, reject) => {
+      connection.query(tagsQuery, [ids], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    const result = searchResult.map(e => {
+      return {...e, Keywords: tags.find(ee => ee.id === e.id)}
+    })
+
+
+    res.status(200).send(result);
 
   } catch (error) {
     res.status(500).send({ error: 'search, Internal Server Error' });
+  } finally {
+    if(connection) {
+      connection.end();
+    }
   }
 };
 

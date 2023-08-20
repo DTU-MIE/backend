@@ -2,6 +2,7 @@ const mime = require('mime');
 const model =  require('../models/needModel');
 
 
+
 async function createNeed(req, res) {
   const {NeedIs, Title, ContactPerson, Keywords, Proposal, Solution} = req.body;
   const FileData = req.file ? Buffer.from(req.file.buffer) : null;
@@ -9,7 +10,8 @@ async function createNeed(req, res) {
   const extension = FileName ? FileName.split('.').pop() : null;
   const createdAt = new Date();
   const UserId = req.user.id;
-  const id = await model.insertNeed({NeedIs, Title, ContactPerson, Keywords, Proposal, Solution, FileData, FileName, extension, createdAt, UserId});
+  const parsedKeywords = JSON.parse(Keywords)
+  const id = await model.insertNeed({NeedIs, Title, ContactPerson, parsedKeywords, Proposal, Solution, FileData, FileName, extension, createdAt, UserId});
   return res.json({ id });
 }
 
@@ -66,6 +68,8 @@ const downloadFile = async (req, res) => {
 };
 
 
+
+
 const allNeeds = async (req, res) => {
   try {
     const needs = await model.getAllNeeds();
@@ -96,23 +100,24 @@ const allNeeds = async (req, res) => {
 };
 const updated = async (req, res) => {
   const { id } = req.params;
-  const { NeedIs, Title, ContactPerson, Keywords, Proposal, Solution } = req.body;
+  const { NeedIs, Title, ContactPerson, Keywords, Proposal, Solution, UserId } = req.body;
   const FileData = req.file ? Buffer.from(req.file.buffer) : null;
   const FileName = req.file ? req.file.originalname : null;
   const extension = FileName ? FileName.split('.').pop() : null;
   const createdAt = new Date();
-
+  const parsedKeywords = Keywords instanceof String ? JSON.parse(Keywords) : Keywords
   const need = {
     NeedIs,
     Title,
     ContactPerson,
-    Keywords,
+    parsedKeywords,
     Proposal,
     Solution,
     FileData,
     FileName,
     extension,
     createdAt,
+    UserId
   };
 
   try {
@@ -141,7 +146,39 @@ const updated = async (req, res) => {
 };
 
 async function getTags(req,res) {
-  return res.status(200).json(model.getTags())
+  const tags =await model.getTags()
+  return res.status(200).json(tags)
+}
+
+async function getRelatedNeeds(req, res) {
+  try {
+    const { id } = req.params;
+    const needs = await model.getNeedsRelatedByTags(id)
+    const responseBody = needs.map((need) => {
+      const isLocal = req.headers.host.startsWith('localhost');
+      const protocol = isLocal ? 'http' : 'https';
+      const ipAddress = isLocal ? 'localhost:3002' : 'www.innocloud.dk';
+
+      const fileURL = need.HasFile === 'file' ? `${protocol}://${ipAddress}/api/v1/download/${need.id}` : 'no file';
+      return {
+        id: need.id,
+        NeedIs: need.NeedIs,
+        Title: need.Title,
+        ContactPerson: need.ContactPerson,
+        CreatedAt: need.CreatedAt,
+        Keywords: need.Keywords,
+        Proposal: need.Proposal,
+        Solution: need.Solution,
+        fileURL: fileURL
+      };
+    });
+
+    res.status(200).json({ body: responseBody });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'Needs could not be found' });
+  }
+
 }
 
 async function deleted(req, res) {
@@ -176,5 +213,6 @@ module.exports = {
   allNeeds,
   updated,
   deleted,
-  getTags
+  getTags,
+  getRelatedNeeds
 };
