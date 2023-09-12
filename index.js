@@ -37,7 +37,7 @@ app.enable("trust proxy")
 app.use((req, res, next) => {
   next()
 }, cors({
-  origin: ['http://localhost:3000', 'https://mie.4a4b.dk',"https://www.innocloud.dk","https://innocloud.dk", "http://innocloud.dk",'*'],
+  origin: ['http://localhost:3000', 'https://mie.4a4b.dk',"https://innocloudmoro.4a4b.dk","https://www.innocloud.dk","https://innocloud.dk", "http://innocloud.dk",'*'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
 }))
